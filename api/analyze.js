@@ -25,7 +25,7 @@ async function tryClaude(b64) {
  
     if(!res.ok) {
         const err = await res.json();
-        if(res.status === 401 || res.status === 403) throw new Error("Claude Auth Error"); // FIX: throw new err → throw new Error
+        if(res.status === 401 || res.status === 403) throw new Error("Claude Auth Error");
         throw new Error(`claude_fallback: ${err.error?.message}`);
     }
  
