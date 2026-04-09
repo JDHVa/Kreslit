@@ -3,115 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Kreslit - Air Drawing</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="app">
-        <div class="cargando">
-            <div class="anillo">
-                <h1 class="titulo-inicial">
-                    Kristel - Air Drawing
-                </h1>
-                <p class="cargar-msg">
-                    Loading Mediapipe
-                </p>
-            </div>
-            <canvas class="canvas">
-
-            </canvas>
-
-            <!-- Panel de la izquierda -->
-            <div id="panelL" class="cristal">
-                <div class="ph Izq">
-                    <span>✋</span> <span> Left Hand - Commands</span>
-                </div>
-                <div class="srow">
-                    <div class="punto" id="dotL"></div>
-                        <span class="stexto" id="stxt">
-                            No Hand Detected
-                        </span>
-                    <div class="subIzq" id="ssubL">
-                        Show your Hand
-                    </div>
-                    <div class="crow">
-                        <div class="csw" id="cswL"></div>
-                        <span id="cnameL">Cyan</span>&nbsp;·&nbsp;
-                        <span id="brushLbl">Medium</span></div>
-                    </div>
-                </div>
-            </div>
+    <div id="app">
+    
+        <div class="overlay hidden" id="loadScreen">
+            <div class="anillo"></div>
+            <h1 class="ov-title">Loading...</h1>
+            <p id="loadMsg" class="ov-sub">Loading MediaPipe</p>
         </div>
-
-        <!-- Panel de la izquierda -->
-
+        
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+            <h1 style="font-style: italic; color:linear-gradient(135deg, rgba(168,85,247,0.22), rgba(99,102,241,0.22));">Kreslit</h1>
+        </div>        
+        <canvas id="canvas"></canvas>
+            
+        <div id="panelL" class="cristal">
+            <div class="ph Izq"><span></span><span>Left Hand — Commands</span></div>
+            <div class="srow"><div class="punto" id="dotL"></div><span id="stxtL" class="stxt">No Hand Detected</span></div>
+            <div id="ssubL" class="ssub">Show your left hand</div>
+            <div class="crow"><div class="csw" id="cswL"></div><span id="cnameL">Cyan</span>&nbsp;·&nbsp;<span id="brushLbl">Medium</span></div>
+        </div>
+        
         <div id="panelR" class="cristal">
-            <div class="ph der">
-                    <span>✋</span> 
-                    <span> Right Hand - Draw / Execute the commands with the fist</span>
-            </div>
-            <div class="srow">
-                <div class="conto" id="dotR"></div>
-                <span class="stexto" id="stxt">
-                    No hand Detected
-                </span>
-            </div>
-            <div class="subIzq" id="ssubR">
-                Show your hand
-            </div>
+            <div class="ph der"><span></span><span>Right Hand — Draw / Execute</span></div>
+            <div class="srow"><div class="punto" id="dotR"></div><span id="stxtR" class="stxt">No Hand Detected</span></div>
+            <div id="ssubR" class="ssub">Show your right hand</div>
         </div>
     
-        <!-- Barra de conmandos -->
-
-        <div class="cristal" id="cmdBar">
+        <div id="cmdBar" class="cristal">
             <span id="cmdEmoji">✊</span>
-            <span id="cmdText">Waiting for the right Palm</span>
-            <button class="cmdMouseBtn">Click here</button>
+            <span id="cmdText">Waiting for right pinch...</span>
+            <button id="cmdMouseBtn">Click here too</button>
         </div>
-
-        <!-- Guia de gestos -->
-
-        <div class="cristal" id="guide">
+    
+        <div id="guide" class="cristal">
             <h4>Gestures</h4>
             <div class="gcols">
                 <div class="gcol L">
                     <h5>Left Hand</h5>
-                            <div class="gi"><em>✊</em><span>Fist = Activate draw</span></div>
-                            <div class="gi"><em>✌</em><span>Peace = Color Roulette</span></div>
-                            <div class="gi"><em>3️⃣</em><span>3 fingers = Undo Create</span></div>
-                            <div class="gi"><em>🤌</em><span>Pinch = Pencil</span></div>
-                            <div class="gi"><em>🖐</em><span>Palm = Clean</span></div>
-                            <div class="gi"><em>👍</em><span>Thumb = AI analyzer</span></div>
+                    <div class="gi"><em>✊</em><span>Fist = Activate draw</span></div>
+                    <div class="gi"><em>✌</em><span>Peace = Color Roulette</span></div>
+                    <div class="gi"><em>3️⃣</em><span>3 fingers = Undo Create</span></div>
+                    <div class="gi"><em>🤌</em><span>Pinch = Pencil</span></div>
+                    <div class="gi"><em>🖐</em><span>Palm = Clean</span></div>
+                    <div class="gi"><em>👍</em><span>Thumb = AI analyzer</span></div>
+                </div>
+                <div class="gcol R">
+                    <h5>Right Hand</h5>
+                    <div class="gi"><em>☝</em><span>Index = Cursor</span></div>
+                    <div class="gi"><em>✊</em><span>Fist = Confirm</span></div>
                 </div>
             </div>
         </div>
-
-
+    
         <div id="histPanel" class="cristal">
             <h3>History of AI</h3>
-            <div id="hlist" class="hempty">
-                Without analysis
-            </div>
+            <div id="hlist"><div class="hempty">Without analysis</div></div>
         </div>
-
-        <div id="aipanel" class="cristal hidden">
-            <div id="aiHead">
-                <span class="aiTitle">Claude Opinion</span>
-                <button id="closeAI"></button>
-            </div>
+        
+        <div id="aiPanel" class="cristal hidden">
+            <div id="aiHead"><span id="aiTitle">Claude Opinion</span><button id="closeAI"></button></div>
             <div id="aiOCR"></div>
-            <div id="aiComment">
-                Use 👍 to analyze your draw
-            </div>
+            <div id="aiComment">Use 👍 to analyze your draw</div>
         </div>
-
+    
         <div id="bottomBar">
             <button class="bbtn" id="swapBtn">Turn hands</button>
-            <button class="bbtn" id="undoBtn">UndoCreate</button>
+            <button class="bbtn" id="undoBtn">Undo Create</button>
             <button class="bbtn" id="clearBtn">Clear</button>
             <button class="bbtn" id="analyzeBtn">AI analyzer</button>
         </div>
+    
     </div>
-
+    <script type="module" src="main.js"></script>
 </body>
 </html>
