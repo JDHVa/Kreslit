@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <div class="cargando">
+            <div class="anillo">
+                <h1 class="titulo-inicial">
+                    Kristel - Air Drawing
+                </h1>
+                <p class="cargar-msg">
+                    Loading Mediapipe
+                </p>
+            </div>
+            <canvas class="canvas">
+
+            </canvas>
+
+            <!-- Panel de la izquierda -->
+            <div id="panelL" class="cristal">
+                <div class="ph Izq">
+                    <span>✋</span> <span> Left Hand - Commands</span>
+                </div>
+                <div class="srow">
+                    <div class="punto" id="dotL"></div>
+                        <span class="stexto" id="stxt">
+                            No Hand Detected
+                        </span>
+                    <div class="subIzq" id="ssubL">
+                        Show your Hand
+                    </div>
+                    <div class="crow">
+                        <div class="csw" id="cswL"></div>
+                        <span id="cnameL">Cyan</span>&nbsp;·&nbsp;
+                        <span id="brushLbl">Medium</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel de la izquierda -->
+
+        <div id="panelR" class="cristal">
+            <div class="ph der">
+                    <span>✋</span> 
+                    <span> Right Hand - Draw / Execute the commands with the fist</span>
+            </div>
+            <div class="srow">
+                <div class="conto" id="dotR"></div>
+                <span class="stexto" id="stxt">
+                    No hand Detected
+                </span>
+            </div>
+            <div class="subIzq" id="ssubR">
+                Show your hand
+            </div>
+        </div>
+    
+        <!-- Barra de conmandos -->
+
+        <div class="cristal" id="cmdBar">
+            <span id="cmdEmoji">✊</span>
+            <span id="cmdText">Waiting for the right Palm</span>
+            <button class="cmdMouseBtn">Click here</button>
+        </div>
+
+        <!-- Guia de gestos -->
+
+        <div class="cristal" id="guide">
+            <h4>Gestures</h4>
+            <div class="gcols">
+                <div class="gcol L">
+                    <h5>Left Hand</h5>
+                            <div class="gi"><em>✊</em><span>Fist = Activate draw</span></div>
+                            <div class="gi"><em>✌</em><span>Peace = Color Roulette</span></div>
+                            <div class="gi"><em>3️⃣</em><span>3 fingers = Undo Create</span></div>
+                            <div class="gi"><em>🤌</em><span>Pinch = Pencil</span></div>
+                            <div class="gi"><em>🖐</em><span>Palm = Clean</span></div>
+                            <div class="gi"><em>👍</em><span>Thumb = AI analyzer</span></div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="histPanel" class="cristal">
+            <h3>History of AI</h3>
+            <div id="hlist" class="hempty">
+                Without analysis
+            </div>
+        </div>
+
+        <div id="aipanel" class="cristal hidden">
+            <div id="aiHead">
+                <span class="aiTitle">Claude Opinion</span>
+                <button id="closeAI"></button>
+            </div>
+            <div id="aiOCR"></div>
+            <div id="aiComment">
+                Use 👍 to analyze your draw
+            </div>
+        </div>
+
+        <div id="bottomBar">
+            <button class="bbtn" id="swapBtn">Turn hands</button>
+            <button class="bbtn" id="undoBtn">UndoCreate</button>
+            <button class="bbtn" id="clearBtn">Clear</button>
+            <button class="bbtn" id="analyzeBtn">AI analyzer</button>
+        </div>
+    </div>
+
+</body>
+</html>

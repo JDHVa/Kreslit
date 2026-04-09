@@ -1,0 +1,80 @@
+*,*::before,*::after {
+    margin:0;
+    padding:0;
+    box-sizing:border-box
+
+}
+
+body {
+    background:#050510;
+    overflow:hidden;
+    font-family:'Space Grotesk',sans-serif;
+    color:#fff;
+    height:100vh;
+    width:100vw
+}
+
+#app { 
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.anillo {
+    width: 52px;
+    height: 52px;
+    border: 3px solid rgba(0, 245, 255, .15);
+    border-top-color: #00f5ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: none;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+
+
+
+}
+
+.cristal {
+    background: rgba(10,10,25,.72);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border :  1px solid rgba(255,255,255,.1);
+    border-radius: 14px;
+    padding: 11px 13px;
+}
+
+
+#panelL {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 10;
+    min-width: 168px;
+}
+
+#panelR {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 10;
+    min-width: 168px;
+}
+
+
+
+
