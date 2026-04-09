@@ -1,6 +1,6 @@
 export const config = { runtime: "edge" };
  
-const PROMPT = `The user draw in the air {black background, neon strokes}. Answer ONLY JSON, without backticks: {"texto" : "legible text if there isn't nothing null", "descripcion": "What do you see only 1 phrase", "comentario": "Creative opinion 1-2 phrases in english"}`; // FIX: missing closing " before }
+const PROMPT = `The user draw in the air {black background, neon strokes}. Answer ONLY JSON, without backticks: {"texto" : "legible text if there isn't nothing null", "descripcion": "What do you see only 1 phrase if its a math problem then write it", "comentario": "Creative opinion 1-2 phrases in english, if it's a math answer then put the answer of that math problem even integrals if yout think it's a integral"}`; 
  
 async function tryClaude(b64) {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
