@@ -30,7 +30,7 @@ and then make a pinch 🤌
 ![IMG](media/ai-sign.png)
 
 * Pinch, with this command you run all the commands that you start executing with the left hand 🤌
-<img src="media/pinh-sign.png" alt="Descripción de la imagen" width="300"/>
+<div align="center"><img src="media/pinh-sign.png" alt="Descripción de tu imagen" width="300" /></div>
 - AI Analyzer, as you may think it's just like the name siad, Claude, Gemini or Groq the one that has free tokens will give an analysis about what you draw, also give a commentary about if he like the draw or other kind of comments
 - Use of mediapie but in JS, this help's with the hand-tracking and the recognition of the gestures
 
