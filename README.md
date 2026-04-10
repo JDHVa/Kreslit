@@ -16,20 +16,23 @@ The feutures of the profect are:
 * Activate the draw mode, it runs when you close your hand 🤌
 <div align="center"><img src="media/pinh-sign.png" alt="Descripción de tu imagen" width="300" /></div>
 
-* Color Roulette, you can change the color of the pencil with this feutures, it runs when you make the peace sign ✌, and to pick another color you have to use your right hand and select the one 
+* Color Roulette, you can change the color of the pencil with this feutures, it runs when you make the peace sign Pinky + Angular 🤙, and to pick another color you have to use your right hand and select the one 
 and then make a pinch 🤌
-<div align="center"><img src="media/peace-sign.png" alt="Descripción de tu imagen" width="300" /></div>
+<div align="center"><img src="media/pinky-sign.png" alt="Descripción de tu imagen" width="300" /></div>
 
 * Undo Create what you do in the last movement, it runs when you use your Index, Middle and Angular finger 3️⃣3
 <div align="center"><img src="media/undocreate-sign.png" alt="Descripción de tu imagen" width="300" /></div>
 
-* Clean whatever it's in the whiteboard, it runs when you open or your hand 🖐
-<div align="center"><img src="media/palm-sign.png" alt="Descripción de tu imagen" width="300" /></div>
+* Clean whatever it's in the whiteboard, it runs when you open or your hand ✌
+<div align="center"><img src="media/peace-sign.png" alt="Descripción de tu imagen" width="300" /></div>
 
 * AI Analyzer, it runs when your only show your thumb 👍
 <div align="center"><img src="media/ai-sign.png" alt="Descripción de tu imagen" width="300" /></div>
 
 * Pinch, with this command you run all the commands that you start executing with the left hand 🤌
+<div align="center"><img src="media/pinh-sign.png" alt="Descripción de tu imagen" width="300" /></div>
+
+* Nothing, it runs when you show your whole hand
 <div align="center"><img src="media/pinh-sign.png" alt="Descripción de tu imagen" width="300" /></div>
 - AI Analyzer, as you may think it's just like the name siad, Claude, Gemini or Groq the one that has free tokens will give an analysis about what you draw, also give a commentary about if he like the draw or other kind of comments
 - Use of mediapie but in JS, this help's with the hand-tracking and the recognition of the gestures
