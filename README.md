@@ -12,22 +12,22 @@ The feutures of the profect are:
 - Use of
 - Commands: Different comands,(all the command works only with the Left Hand, with the right you run it) this are the commands
 * Change the thickness of the pencil, activate with a pinch ✊
-![IMG](media/fist-sign.png)
+<div align="center"><img src="media/first-sign.png" alt="Descripción de tu imagen" width="300" /></div>
 * Activate the draw mode, it runs when you close your hand 🤌
-![IMG](media/pinh-sign.png)
+<div align="center"><img src="media/pinh-sign.png" alt="Descripción de tu imagen" width="300" /></div>
 
 * Color Roulette, you can change the color of the pencil with this feutures, it runs when you make the peace sign ✌, and to pick another color you have to use your right hand and select the one 
 and then make a pinch 🤌
-![IMG](media/peace-sign.png)
+<div align="center"><img src="media/peace-sign.png" alt="Descripción de tu imagen" width="300" /></div>
 
 * Undo Create what you do in the last movement, it runs when you use your Index, Middle and Angular finger 3️⃣3
-![IMG](media/undocreate-sign.png)
+<div align="center"><img src="media/undocreate-sign.png" alt="Descripción de tu imagen" width="300" /></div>
 
 * Clean whatever it's in the whiteboard, it runs when you open or your hand 🖐
-![IMG](media/palm-sign.png)
+<div align="center"><img src="media/palm-sign.png" alt="Descripción de tu imagen" width="300" /></div>
 
 * AI Analyzer, it runs when your only show your thumb 👍
-![IMG](media/ai-sign.png)
+<div align="center"><img src="media/ai-sign.png" alt="Descripción de tu imagen" width="300" /></div>
 
 * Pinch, with this command you run all the commands that you start executing with the left hand 🤌
 <div align="center"><img src="media/pinh-sign.png" alt="Descripción de tu imagen" width="300" /></div>
