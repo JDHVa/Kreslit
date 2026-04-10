@@ -12,7 +12,7 @@ The feutures of the profect are:
 - Use of
 - Commands: Different comands,(all the command works only with the Left Hand, with the right you run it) this are the commands
 * Change the thickness of the pencil, activate with a pinch ✊
-<div align="center"><img src="media/first-sign.png" alt="Descripción de tu imagen" width="300" /></div>
+<div align="center"><img src="media/fist-sign.png" alt="Descripción de tu imagen" width="300" /></div>
 * Activate the draw mode, it runs when you close your hand 🤌
 <div align="center"><img src="media/pinh-sign.png" alt="Descripción de tu imagen" width="300" /></div>
 
