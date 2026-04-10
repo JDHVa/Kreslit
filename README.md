@@ -14,7 +14,7 @@ The feutures of the profect are:
 * Change the thickness of the pencil, activate with a pinch ✊
 ![IMG](media/fist-sign.png)
 * Activate the draw mode, it runs when you close your hand 🤌
-![IMG](media/pinch-sign.png)
+![IMG](media/pinh-sign.png)
 
 * Color Roulette, you can change the color of the pencil with this feutures, it runs when you make the peace sign ✌, and to pick another color you have to use your right hand and select the one 
 and then make a pinch 🤌
@@ -30,8 +30,7 @@ and then make a pinch 🤌
 ![IMG](media/ai-sign.png)
 
 * Pinch, with this command you run all the commands that you start executing with the left hand 🤌
-![IMG](media/pinch-sign.png)
-
+<img src="media/pinh-sign.png" alt="Descripción de la imagen" width="300"/>
 - AI Analyzer, as you may think it's just like the name siad, Claude, Gemini or Groq the one that has free tokens will give an analysis about what you draw, also give a commentary about if he like the draw or other kind of comments
 - Use of mediapie but in JS, this help's with the hand-tracking and the recognition of the gestures
 
