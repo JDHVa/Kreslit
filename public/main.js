@@ -84,11 +84,11 @@ function detectRaw(lms, side){
     const d = Math.hypot(lms[8].x-lms[4].x, lms[8].y-lms[4].y, lms[8].z-lms[4].z);
     return {
         pinch: d < PINCH_D,
-        peace: i && m && !r && !p && !thumbExt,
+        peace: i && m && r && p,
         three: i && m && r && !p && !thumbExt,
         fist:  !i && !m && !r && !p && !thumbExt,
         thumb: thumbExt && !i && !m && !r && !p,
-        palm:  i && m && r && p,
+        palm:  i && m && !r && !p && !thumbExt,
     };
 }
 
