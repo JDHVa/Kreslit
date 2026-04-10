@@ -13,8 +13,11 @@ The feutures of the profect are:
 - Commands: Different comands,(all the command works only with the Left Hand, with the right you run it) this are the commands
 * Change the thickness of the pencil, activate with a pinch ✊
 <div align="center"><img src="media/fist-sign.png" alt="Descripción de tu imagen" width="300" /></div>
-* Activate the draw mode, it runs when you close your hand 🤌
+
+* Activate the draw mode, it runs when you pinch your hand 🤌 with your LEFT HAND and then use the index finger in the RIGHT HAND to draw
 <div align="center"><img src="media/pinh-sign.png" alt="Descripción de tu imagen" width="300" /></div>
+
+* Activate the destroy mode, it runs when you pinch your hand 🤌 with your RIGHT HAND and then use the index finger in THE LEFT HAND to destroy 
 
 * Color Roulette, you can change the color of the pencil with this feutures, it runs when you make the peace sign Pinky + Angular 🤙, and to pick another color you have to use your right hand and select the one 
 and then make a pinch 🤌
@@ -32,6 +35,7 @@ and then make a pinch 🤌
 * Pinch, with this command you run all the commands that you start executing with the left hand 🤌
 <div align="center"><img src="media/pinh-sign.png" alt="Descripción de tu imagen" width="300" /></div>
 
+* 
 * Nothing, it runs when you show your whole hand
 <div align="center"><img src="media/pinh-sign.png" alt="Descripción de tu imagen" width="300" /></div>
 - AI Analyzer, as you may think it's just like the name siad, Claude, Gemini or Groq the one that has free tokens will give an analysis about what you draw, also give a commentary about if he like the draw or other kind of comments
