@@ -91,7 +91,7 @@ function detectRaw(lms, side){
     const d = Math.hypot(lms[8].x-lms[4].x, lms[8].y-lms[4].y, lms[8].z-lms[4].z);
     return {
         pinch: d < PINCH_D,
-        pinky: !i && !m && r && p && !thumbExt,   // ring+pinky = open color palette
+        pinky: !i && !m && r && p && !thumbExt,   // ring + angular = open color palette
         peace: i && m && !r && !p && !thumbExt,    // peace = clear canvas
         three: i && m && r && !p && !thumbExt,     // 3 fingers = undo
         fist:  !i && !m && !r && !p && !thumbExt,  // fist = brush
@@ -148,13 +148,13 @@ function updatePeaceHover(rip) {
 }
 
 const CMD_INFO = {
-    cmd_peace:{e:"🎨",t:"Point a color · Right Pinch or click to confirm"},
-    cmd_fist: {e:"🖌️",t:"Right Pinch or click → change brush"},
-    cmd_three:{e:"↩️",t:"Right Pinch or click → undo"},
-    cmd_palm: {e:"🗑️",t:"Right Pinch or click → clear all"},
-    cmd_thumb:{e:"✨",t:"Right Pinch or click → analyze with AI"},
-    draw:     {e:"✏️",t:"Drawing — drop the left pinch to pause"},
-    erase:    {e:"⬜",t:"Erasing — drop the right pinch to stop"},
+    cmd_peace:{e:"",t:"Point a color · Right Pinch or click to confirm"},
+    cmd_fist: {e:"",t:"Right Pinch or click → change brush"},
+    cmd_three:{e:"",t:"Right Pinch or click → undo"},
+    cmd_palm: {e:"",t:"Right Pinch or click → clear all"},
+    cmd_thumb:{e:"",t:"Right Pinch or click → analyze with AI"},
+    draw:     {e:"",t:"Drawing — drop the left pinch to pause"},
+    erase:    {e:"",t:"Erasing — drop the right pinch to stop"},
 };
 function showCmd(state){
     const info = CMD_INFO[state];
@@ -191,14 +191,12 @@ function updateFSM(now){
         Lh.pinching = Lh.pinchFrames >= PINCH_CONFIRM;
     } else { Lh.pinchFrames=0; Lh.pinching=false; Lh.wasPinch=false; }
 
-    // Right pinch rising edge → execute staged left-hand command
     if(Rh.pinching && !Rh.wasPinch && S.leftState!=='idle' && S.leftState!=='draw'){
         executeCmd(); return;
     }
 
     const CD = 450;
 
-    // Erase mode: right pinch held + left index erases (priority over left-hand states)
     if(S.leftState === 'idle'){
         if(Rh.pinching){
             if(Lh.present){
@@ -214,7 +212,7 @@ function updateFSM(now){
         endErase(); S.eraseActive=false;
     }
 
-    // Left hand state machine (skip if erasing)
+    // Made with AI
     if(S.leftState === 'idle' && !S.eraseActive){
         if(!Lh.present){ showCmd(S.leftState); return; }
         if(Lh.pinching)                           S.leftState='draw';
@@ -225,7 +223,6 @@ function updateFSM(now){
         else if(Lg.thumb  && now-S.gestCD>CD)     { S.leftState='cmd_thumb'; S.gestCD=now; }
     }
 
-    // Draw mode
     if(S.leftState === 'draw'){
         if(!Lh.present || !Lh.pinching){ endStroke(); S.leftState='idle'; S.drawActive=false; return; }
         if(Rh.present){
@@ -235,8 +232,7 @@ function updateFSM(now){
         return;
     }
 
-    // Auto-cancel commands when gesture released
-    // cmd_peace (color picker) is LOCKED — only closes via executeCmd
+
     if(Lh.present){
         if(S.leftState==='cmd_fist'  && !Lg.fist)   S.leftState='idle';
         if(S.leftState==='cmd_three' && !Lg.three)  S.leftState='idle';
@@ -295,7 +291,6 @@ function drawFrame(now){
     cx.fillStyle="rgba(5,5,16,.38)";
     cx.fillRect(0,0,W,H);
 
-    // Offscreen drawing layer with erase compositing
     dlCtx.clearRect(0,0,W,H);
     for(const s of S.strokes) renderStroke(s, dlCtx);
     if(S.cur) renderStroke(S.cur, dlCtx);
@@ -333,7 +328,6 @@ function drawWheelIfNeeded(){
 function drawCursors(){
     if(S.L.present && S.L.lms){
         if(S.eraseActive && S.L.ip){
-            // Eraser cursor on left index tip
             const pos = S.L.ip, bw = BRUSHES[S.bi].w;
             cx.save();
             cx.beginPath(); cx.arc(pos.x, pos.y, bw/2+6, 0, Math.PI*2);
@@ -403,9 +397,9 @@ function drawFloats(now){
 }
 
 const STATE_TEXT = {
-    idle:'Waiting for a gesture', draw:'✏️ Drawing Mode', cmd_peace:'🎨 Choose a color — locked until selected',
-    cmd_fist:'🖌️ Ready — confirm', cmd_three:'↩️ Ready — confirm',
-    cmd_palm:'🗑️ Ready — confirm', cmd_thumb:'✨ Ready — confirm',
+    idle:'Waiting for a gesture', draw:'Drawing Mode', cmd_peace:'Choose a color — locked until selected',
+    cmd_fist:'Ready — confirm', cmd_three:'Ready — confirm',
+    cmd_palm:'Ready — confirm', cmd_thumb:'Ready — confirm',
 };
 
 function updateUI(){
@@ -413,7 +407,7 @@ function updateUI(){
     else{ dotL.classList.remove("on"); stxtL.textContent="Not detected"; ssubL.textContent="Show your left hand"; }
     if(S.R.present){
         dotR.classList.add("on");
-        stxtR.textContent = S.eraseActive ? "⬜ Erasing" : S.R.pinching ? "🤌 Pinch" : "Detected";
+        stxtR.textContent = S.eraseActive ? "Erasing" : S.R.pinching ? "Pinch" : "Detected";
         ssubR.textContent = S.eraseActive ? "Left index to erase" : S.leftState==='draw' ? "Draw with your index" : "Pinch to confirm";
     } else{ dotR.classList.remove("on"); stxtR.textContent="Not detected"; ssubR.textContent="Show your right hand"; }
 }
@@ -450,7 +444,7 @@ async function analyze(){
         if(!res.ok){ const e=await res.json(); throw new Error(e.error||res.statusText); }
         const data=await res.json();
         const p = data;
-        if(p.provider) document.getElementById("aiTitle").textContent=`✨ ${p.provider} thinks`;
+        if(p.provider) document.getElementById("aiTitle").textContent=`${p.provider} thinks`;
         if(p.texto){
             aiOCR.style.display="block";
             aiOCR.textContent=`"${p.texto}"`;

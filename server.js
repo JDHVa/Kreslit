@@ -65,9 +65,9 @@ app.post("/api/analyze", async (req, res) => {
   if (!image) return res.status(400).json({ error: "No image" });
 
   const providers = [
-    { name: "Claude", fn: () => tryClaude(image) },
-    { name: "Gemini", fn: () => tryGemini(image) },
     { name: "Groq",   fn: () => tryGroq(image)   },
+    { name: "Gemini", fn: () => tryGemini(image) },
+    { name: "Claude", fn: () => tryClaude(image) },
   ];
 
   for (const p of providers) {
