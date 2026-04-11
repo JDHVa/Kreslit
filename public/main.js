@@ -508,7 +508,7 @@ async function startApp() {
             minHandPresenceConfidence:0.45,
             minTrackingConfidence:0.4
         });
-        loadMsg.textContent="Accessing the camera…";
+        loadMsg.textContent="Accessing the camera… also i dont have access to your camera or your draws so be confident because nobody except you can see your draws or your camera :)";
         const stream=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280},height:{ideal:720},facingMode:"user"}});
         vid.srcObject=stream;
         await new Promise(r=>{vid.onloadedmetadata=()=>{vid.play();r();};});
