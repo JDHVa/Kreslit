@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AIR Drawing — Collab</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+
+/* all this css is full made by gemini */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{background:#050510;font-family:'Space Grotesk',sans-serif;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 20px}
+h1{font-size:2rem;font-weight:700;background:linear-gradient(135deg,#00f5ff,#bf00ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+.sub{font-size:.85rem;color:rgba(255,255,255,.35);margin-bottom:36px}
+.container{width:100%;max-width:680px;display:flex;flex-direction:column;gap:20px}
+.glass{background:rgba(255,255,255,.055);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:20px 22px}
+#createForm h3{font-size:.9rem;font-weight:600;color:rgba(255,255,255,.6);margin-bottom:14px}
+.row{display:flex;gap:10px}
+input[type=text]{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:10px;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:.88rem;padding:9px 13px;outline:none;transition:border .18s}
+input[type=text]:focus{border-color:rgba(0,245,255,.4)}
+input[type=text]::placeholder{color:rgba(255,255,255,.25)}
+.btn{background:rgba(0,245,255,.1);border:1px solid rgba(0,245,255,.28);border-radius:10px;color:#00f5ff;font-family:'Space Grotesk',sans-serif;font-size:.85rem;font-weight:500;padding:9px 20px;cursor:pointer;transition:all .18s;white-space:nowrap}
+.btn:hover{background:rgba(0,245,255,.18)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.err{font-size:.75rem;color:#ff6666;margin-top:6px;display:none}
+/* Panel list */
+#panelList h3{font-size:.9rem;font-weight:600;color:rgba(255,255,255,.6);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.count{font-size:.75rem;color:rgba(255,255,255,.28);font-weight:400}
+.panel-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:all .18s;text-decoration:none;color:inherit}
+.panel-card:hover{background:rgba(255,255,255,.08);border-color:rgba(0,245,255,.2);transform:translateY(-1px)}
+.pname{font-size:.95rem;font-weight:500}
+.powner{font-size:.72rem;color:rgba(255,255,255,.32);margin-top:2px}
+.penter{font-size:.75rem;color:rgba(0,245,255,.5)}
+.empty{font-size:.8rem;color:rgba(255,255,255,.22);text-align:center;padding:20px 0}
+.loading{font-size:.8rem;color:rgba(255,255,255,.25);text-align:center;padding:20px 0}
+.back{font-size:.78rem;color:rgba(255,255,255,.25);text-decoration:none;margin-top:24px;transition:color .18s}
+.back:hover{color:rgba(255,255,255,.5)}
+</style>
+</head>
+<body>
+<h1>AIR Drawing</h1>
+<p class="sub">Collaborative Canvas — draw together in real time (If you think that is cool let me know, or if you thinks that it need supervission let me know)</p>
+
+<div class="container">
+  <div class="glass" id="createForm">
+    <h3>Create a new canvas</h3>
+    <div class="row">
+      <input type="text" id="panelName" placeholder="Canvas name" maxlength="32"/>
+      <input type="text" id="ownerName" placeholder="Your name" maxlength="24"/>
+      <button class="btn" id="createBtn">Create</button>
+    </div>
+    <p class="err" id="createErr"></p>
+  </div>
+
+  <div class="glass" id="panelList">
+    <h3>Active canvases <span class="count" id="countLabel"></span></h3>
+    <div id="cards"><div class="loading">Loading…</div></div>
+  </div>
+</div>
+
+<a class="back" href="/">Back to AIR Drawing</a>
+<script src="/config.js"></script>
+<script type="module" src="app.js">
+</script>
+</body>
+</html>
