@@ -9,7 +9,7 @@ const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
 const createBtn = document.getElementById("createBtn");
 const panelName = document.getElementById("panelName");
-const ownerNameI = document.getElementById("ownerNameI");
+const ownerNameI = document.getElementById("ownerName");
 const createErr = document.getElementById("createErr");
 const countLabel = document.getElementById("countLabel");
 const cards = document.getElementById("cards");

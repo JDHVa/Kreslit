@@ -91,7 +91,7 @@ function detectRaw(lms, side){
     const d = Math.hypot(lms[8].x-lms[4].x, lms[8].y-lms[4].y, lms[8].z-lms[4].z);
     return {
         pinch: d < PINCH_D,
-        pinky: !i && !m && r && p && !thumbExt,   // ring+pinky = open color palette
+        pinky: thumbExt && !i && !m && !r && p && true,   // ring+pinky = open color palette
         peace: i && m && !r && !p && !thumbExt,    // peace = clear canvas
         three: i && m && r && !p && !thumbExt,     // 3 fingers = undo
         fist:  !i && !m && !r && !p && !thumbExt,  // fist = brush
@@ -657,10 +657,6 @@ swapBtn.addEventListener("click",()=>{
 undoBtn.addEventListener("click",()=>undoLast());
 clearBtn.addEventListener("click",()=>{ S.strokes=[]; S.cur=null; S.eraseStrokes=[]; S.erCur=null; S.floats=[]; });
 analyzeBtn.addEventListener("click",()=>analyze());
-document.getElementById("tutStartBtn").addEventListener("click",()=>{
-    document.getElementById("tutorialIntro").classList.add("hidden");
-    tutStart();
-});
 document.getElementById("tutSkipIntroBtn").addEventListener("click",()=>{
     document.getElementById("tutorialIntro").classList.add("hidden");
 });

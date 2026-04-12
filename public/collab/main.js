@@ -25,7 +25,6 @@ const PINCH_CONFIRM = 3;
 const PINCH_D       = 0.075;
 const WHEEL_R       = 90;
 
-// ─── State ────────────────────────────────────────────────────────────────────
 const S = {
     ready: false,
     ci: 0,
@@ -39,7 +38,7 @@ const S = {
     lastFrameTime: 0,
     panelId: null,
     userName: "Guest",
-    onlineUsers: {},      // userId → {name, color, lastSeen}
+    onlineUsers: {},      
     myUserId: crypto.randomUUID().slice(0,8),
 };
 
@@ -50,7 +49,6 @@ function nullG(){
     return {pinch:false, pinky:false};
 }
 
-// ─── DOM ──────────────────────────────────────────────────────────────────────
 const cv        = document.getElementById("canvas");
 const cx        = cv.getContext("2d");
 const loadScreen= document.getElementById("loadScreen");
@@ -69,7 +67,6 @@ const backBtn   = document.getElementById("backBtn");
 function resize(){ cv.width=cv.offsetWidth; cv.height=cv.offsetHeight; }
 new ResizeObserver(resize).observe(cv); resize();
 
-// ─── Gesture detection (collab: only pinch + pinky) ──────────────────────────
 function detectRaw(lms, side){
     const up = (t,p) => lms[t].y < lms[p].y;
     const i = up(8,6), m = up(12,10), r = up(16,14), p = up(20,18);
@@ -77,7 +74,7 @@ function detectRaw(lms, side){
     const d = Math.hypot(lms[8].x-lms[4].x, lms[8].y-lms[4].y, lms[8].z-lms[4].z);
     return {
         pinch: d < PINCH_D,
-        pinky: !i && !m && r && p && !thumbExt,
+        pinky: thumbExt && !i && !m && !r && p && true,
     };
 }
 
@@ -98,7 +95,6 @@ function assignSide(lms){
     return SWAP_HANDS ? (side==='L'?'R':'L') : side;
 }
 
-// ─── Color ────────────────────────────────────────────────────────────────────
 function setColor(i){
     S.ci = i;
     cswL.style.background = PAL[i].v;
@@ -106,7 +102,6 @@ function setColor(i){
     cnameL.textContent    = PAL[i].n;
 }
 
-// ─── Stroke ───────────────────────────────────────────────────────────────────
 function startStroke(p){ S.cur={c:PAL[S.ci].v, w:BRUSH_W, pts:[{...p}], user:S.myUserId}; }
 function addPt(p){ if(S.cur) S.cur.pts.push({...p}); }
 async function endStroke(){
@@ -114,14 +109,12 @@ async function endStroke(){
     const stroke = {...S.cur};
     S.strokes.push(stroke);
     S.cur = null;
-    // Save to Supabase
     await sb.from("strokes").insert({
         panel_id: S.panelId,
         stroke_data: stroke
     });
 }
 
-// ─── Color wheel ──────────────────────────────────────────────────────────────
 function wheelPt(i){
     const a = (i/PAL.length)*Math.PI*2-Math.PI/2;
     return {x:S.peaceOrigin.x+Math.cos(a)*WHEEL_R, y:S.peaceOrigin.y+Math.sin(a)*WHEEL_R};
@@ -133,13 +126,11 @@ function updatePeaceHover(rip){
     S.peaceHov=null;
 }
 
-// ─── FSM ──────────────────────────────────────────────────────────────────────
 function updateFSM(){
     const Lh=S.L, Rh=S.R;
     const Lg = Lh.present ? smooth(Lh, detectRaw(Lh.lms,'L')) : nullG();
     const Rg = Rh.present ? smooth(Rh, detectRaw(Rh.lms,'R')) : nullG();
 
-    // Pinch frames
     if(Rh.present){
         Rh.wasPinch=Rh.pinching;
         Rh.pinchFrames = Rg.pinch ? Math.min(Rh.pinchFrames+1,PINCH_CONFIRM+2) : 0;
@@ -152,21 +143,18 @@ function updateFSM(){
         Lh.pinching = Lh.pinchFrames >= PINCH_CONFIRM;
     } else { Lh.pinchFrames=0; Lh.pinching=false; Lh.wasPinch=false; }
 
-    // Right pinch rising edge → confirm color
     if(Rh.pinching && !Rh.wasPinch && S.leftState==='cmd_peace'){
         if(S.peaceHov!==null) setColor(S.peaceHov);
         S.leftState='idle'; S.peaceHov=null;
         return;
     }
 
-    // Left: idle state machine
     if(S.leftState==='idle'){
         if(!Lh.present) return;
         if(Lh.pinching)  S.leftState='draw';
         else if(Lg.pinky){ S.leftState='cmd_peace'; S.peaceOrigin=lm2c(Lh.lms[9]); S.peaceHov=null; }
     }
 
-    // Draw mode
     if(S.leftState==='draw'){
         if(!Lh.present||!Lh.pinching){ endStroke(); S.leftState='idle'; S.drawActive=false; return; }
         if(Rh.present){
@@ -176,14 +164,12 @@ function updateFSM(){
         return;
     }
 
-    // cmd_peace: locked until color selected — only cancel if hand disappears
     if(S.leftState==='cmd_peace'){
         if(!Lh.present){ S.leftState='idle'; S.peaceHov=null; return; }
         if(Rh.present) updatePeaceHover(Rh.ip);
     }
 }
 
-// ─── Render ───────────────────────────────────────────────────────────────────
 function renderStroke(s, tc){
     const{c,w,pts}=s; if(pts.length<2) return;
     tc.save(); tc.strokeStyle=c; tc.lineWidth=w; tc.lineCap="round"; tc.lineJoin="round";
@@ -199,10 +185,8 @@ function renderStroke(s, tc){
 
 function drawFrame(){
     const W=cv.width, H=cv.height;
-    // Mirrored camera
     cx.save(); cx.translate(W,0); cx.scale(-1,1); cx.drawImage(vid,0,0,W,H); cx.restore();
     cx.fillStyle="rgba(5,5,16,.38)"; cx.fillRect(0,0,W,H);
-    // All strokes
     for(const s of S.strokes) renderStroke(s,cx);
     if(S.cur) renderStroke(S.cur,cx);
     drawWheelIfNeeded();
@@ -263,7 +247,6 @@ function drawHandLabels(){
     }
 }
 
-// ─── UI ───────────────────────────────────────────────────────────────────────
 function updateUI(){
     if(S.L.present){ dotL.classList.add("on"); stxtL.textContent="Detected";
         ssubL.textContent=S.leftState==='draw'?"Drawing…":S.leftState==='cmd_peace'?"Choose color":"Idle"; }
@@ -284,7 +267,6 @@ function updateOnlineUI(){
     `).join("");
 }
 
-// ─── Supabase: load existing strokes ─────────────────────────────────────────
 async function loadStrokes(){
     const { data } = await sb.from("strokes")
         .select("stroke_data")
@@ -293,7 +275,6 @@ async function loadStrokes(){
     if(data) S.strokes = data.map(r => r.stroke_data);
 }
 
-// ─── Supabase: Realtime subscription ─────────────────────────────────────────
 function subscribeRealtime(){
     sb.channel(`panel:${S.panelId}`)
         .on("postgres_changes", {
@@ -303,11 +284,9 @@ function subscribeRealtime(){
             filter: `panel_id=eq.${S.panelId}`
         }, payload => {
             const stroke = payload.new.stroke_data;
-            // Ignore own strokes (already added locally)
             if(stroke.user !== S.myUserId){
                 S.strokes.push(stroke);
             }
-            // Track user color for online badge
             if(stroke.user && stroke.c){
                 const existing = S.onlineUsers[stroke.user];
                 S.onlineUsers[stroke.user] = {
@@ -320,7 +299,6 @@ function subscribeRealtime(){
         })
         .subscribe();
 
-    // Track self as online
     S.onlineUsers[S.myUserId] = {
         name: S.userName,
         color: PAL[S.ci].v,
@@ -328,7 +306,6 @@ function subscribeRealtime(){
     };
     updateOnlineUI();
 
-    // Prune users not seen in 30s
     setInterval(()=>{
         const now = Date.now();
         for(const id of Object.keys(S.onlineUsers)){
@@ -340,7 +317,6 @@ function subscribeRealtime(){
     }, 10000);
 }
 
-// ─── Main loop ────────────────────────────────────────────────────────────────
 const vid = document.createElement("video");
 vid.autoplay=true; vid.playsInline=true; vid.muted=true;
 
@@ -380,19 +356,15 @@ function loop(now){
     drawFrame();
 }
 
-// ─── Init ─────────────────────────────────────────────────────────────────────
 async function init(){
-    // Get panel ID from URL
     const params = new URLSearchParams(window.location.search);
     S.panelId = params.get("panel");
     if(!S.panelId){ window.location.href="index.html"; return; }
 
-    // Get user name from sessionStorage (set if they came from index)
     S.userName = sessionStorage.getItem("collab_username") || "Guest";
     S.onlineUsers[S.myUserId] = { name: S.userName, color: PAL[S.ci].v, lastSeen: Date.now() };
 
     try {
-        // Load panel info
         const { data: panel } = await sb.from("panels").select("*").eq("id", S.panelId).single();
         if(!panel){ window.location.href="index.html"; return; }
         panelNameLbl.textContent  = panel.name;

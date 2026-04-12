@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kreslit - Practice</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+    <div id="loadScreen">
+        <div class="ring"></div>
+        <div class="l-title">Loading...</div>
+        <div id="loadMsg" class="l-sub">Starting MediaPipe, remember i don't have access to your camera</div>
+    </div>
+
+    <div id="main">
+        <div id="camSide">
+            <canvas id="canvas"></canvas>
+            <div id="gestureHint">Show your hand to the camera</div>
+        </div>
+
+        <div id="instrPanel">
+            <a href="index.html" class="back-link">- All gestures</a>
+
+            <div>
+                <div class="gesture-emoji" id="gEmoji"></div>
+                <div class="gesture-name" id="gName"></div>
+            </div>
+            
+            <div class="gesture-desc" id="gDesc"></div>
+            <div class="hands-needed" id="gHands"></div>
+
+            <div id="detectArea">
+                <div class="prog-ring" id="progRing">
+                    <svg width="72" height="72" viewBox="0 0 72 72">
+                        <circle class="prog-bg" cx="36" cy="36" r="30"/>
+                        <circle class="prog-fill" id="progCircle" cx="36" cy="36" r="30"/>
+                    </svg>
+                    <div id="progLabel">0%</div>
+                </div>
+                <div id="detectIcon"></div>
+                <div id="detectMsg">Perform the gesture <br> and hold it steady</div>
+                <div id="handDots">
+                    <div class="hdot"><div class="hdot-circle" id="hdotL"></div><span>Left</span></div>
+                    <div class="hdot"><div class="hdot-circle" id="hdotR"></div><span>Right</span></div>
+                </div>
+            </div>
+
+            <div id="successArea">
+                <div class="success-emoji"></div>
+                <div class="success-msg">Perfect! Gesture detected.</div>
+                <div class="success-sub" id="successSub"></div>
+                <button class="btn-next" id="nextBtn">Next gesture →</button>
+                <button class="btn-list" id="listBtn">Back to list</button>
+            </div>
+        </div>
+    </div>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>
