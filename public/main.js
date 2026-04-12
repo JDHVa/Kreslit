@@ -149,10 +149,10 @@ function updatePeaceHover(rip) {
 
 const CMD_INFO = {
     cmd_peace:{e:"",t:"Point a color · Right Pinch or click to confirm"},
-    cmd_fist: {e:"",t:"Right Pinch or click → change brush"},
-    cmd_three:{e:"",t:"Right Pinch or click → undo"},
-    cmd_palm: {e:"",t:"Right Pinch or click → clear all"},
-    cmd_thumb:{e:"",t:"Right Pinch or click → analyze with AI"},
+    cmd_fist: {e:"",t:"Right Pinch or click - change brush"},
+    cmd_three:{e:"",t:"Right Pinch or click - undo"},
+    cmd_palm: {e:"",t:"Right Pinch or click - clear all"},
+    cmd_thumb:{e:"",t:"Right Pinch or click - analyze with AI"},
     draw:     {e:"",t:"Drawing — drop the left pinch to pause"},
     erase:    {e:"",t:"Erasing — drop the right pinch to stop"},
 };
@@ -163,7 +163,6 @@ function showCmd(state){
 }
 
 function executeCmd(){
-    // Tutorial flags
     if(T.active){
         if(S.leftState==='cmd_three') T.flags.didUndo=true;
         if(S.leftState==='cmd_palm')  T.flags.didClear=true;
@@ -339,7 +338,6 @@ function drawWheelIfNeeded(){
 function drawCursors(){
     if(S.L.present && S.L.lms){
         if(S.eraseActive && S.L.ip){
-            // Eraser cursor on left index tip
             const pos = S.L.ip, bw = BRUSHES[S.bi].w;
             cx.save();
             cx.beginPath(); cx.arc(pos.x, pos.y, bw/2+6, 0, Math.PI*2);

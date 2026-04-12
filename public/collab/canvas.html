@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air Drawing - Collab Canvas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* All this css was made by gemini, giving my main css as a base */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{background:#050510;overflow:hidden;font-family:'Space Grotesk',sans-serif;color:#fff;height:100vh;width:100vw}
+#app{position:relative;width:100%;height:100%}
+canvas{display:block;position:absolute;top:0;left:0;width:100%;height:100%}
+ 
+.overlay{position:absolute;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:rgba(5,5,16,.96)}
+.overlay.hidden{display:none}
+.ring{width:52px;height:52px;border:3px solid rgba(0,245,255,.15);border-top-color:#00f5ff;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ov-title{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,#00f5ff,#bf00ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.ov-sub{font-size:.82rem;color:rgba(255,255,255,.38);text-align:center;max-width:300px;line-height:1.6}
+ 
+.glass{background:rgba(10,10,25,.72);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:11px 13px}
+ 
+/* Status panels */
+#panelL{position:absolute;top:14px;left:14px;z-index:10;min-width:168px}
+#panelR{position:absolute;top:14px;right:14px;z-index:10;min-width:168px}
+.ph{font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.ph.L{color:#00f5ff} .ph.R{color:#bf00ff}
+.dot{width:7px;height:7px;border-radius:50%;background:#222;flex-shrink:0;transition:background .2s,box-shadow .2s}
+.dot.on{background:#00ff88;box-shadow:0 0 7px #00ff88;animation:blink 1.8s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.srow{display:flex;align-items:center;gap:7px}
+.stxt{font-size:.77rem;color:rgba(255,255,255,.7)}
+.ssub{margin-top:3px;font-size:.67rem;color:rgba(255,255,255,.3)}
+.crow{margin-top:7px;display:flex;align-items:center;gap:6px;font-size:.7rem;color:rgba(255,255,255,.35)}
+.csw{width:12px;height:12px;border-radius:50%;border:2px solid rgba(255,255,255,.18);flex-shrink:0}
+ 
+/* Panel info */
+#panelInfo{position:absolute;bottom:54px;left:50%;transform:translateX(-50%);z-index:10;text-align:center;white-space:nowrap}
+.pname-lbl{font-size:.95rem;font-weight:600;color:rgba(255,255,255,.7)}
+.powner-lbl{font-size:.7rem;color:rgba(255,255,255,.3);margin-top:2px}
+ 
+/* Guide */
+#guide{position:absolute;bottom:54px;left:14px;z-index:10;min-width:190px}
+#guide h4{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.35);margin-bottom:8px}
+.gcols{display:flex;gap:14px}
+.gcol h5{font-size:.63rem;font-weight:600;margin-bottom:5px}
+.gcol.L h5{color:#00f5ff} .gcol.R h5{color:#bf00ff}
+.gi{display:flex;align-items:center;gap:5px;font-size:.67rem;color:rgba(255,255,255,.27);margin:2px 0}
+.gi em{font-style:normal;min-width:17px;font-size:.8rem}
+ 
+/* Online users */
+#onlinePanel{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:10}
+.online-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#00ff88;margin-right:5px}
+#onlineLbl{font-size:.72rem;color:rgba(255,255,255,.4)}
+ 
+/* Bottom bar */
+#bottomBar{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:8px}
+.bbtn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;color:rgba(255,255,255,.6);font-family:'Space Grotesk',sans-serif;font-size:.73rem;padding:7px 13px;cursor:pointer;transition:all .18s}
+.bbtn:hover{background:rgba(255,255,255,.1);color:#fff}
+.bbtn.active{border-color:rgba(255,80,80,.4);color:rgba(255,120,120,.8);background:rgba(255,80,80,.08)}
+ 
+/* Users list */
+#usersList{position:absolute;top:90px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:400px}
+.user-badge{font-size:.68rem;padding:3px 10px;border-radius:20px;border:1px solid;white-space:nowrap}
+</style>
+
+</head>
+<body>
+    <div id="app">
+        <div class="overlay" id="loadScreen">
+            <div class="ring"></div>
+            <h1 class="ov-title">Loading...</h1>
+                <p id="loadMsg" class="ov-sub">Loading MediaPipe, also i havent access to your camera or your draws so be confident because nobody except you can see your draws or your camera:)</p>
+         </div>
+
+         <canvas id="canvas"></canvas>
+
+         <div class="glass" id="panelL">
+            <div class="ph L"><span>✋</span><span>Left — Commands</span></div>
+            <div class="srow"><div class="dot" id="dotL"></div><span id="stxtL" class="stxt">Not detected</span></div>
+            <div id="ssubL" class="ssub">Show your left hand</div>
+            <div class="crow"><div class="csw" id="cswL"></div><span id="cnameL">Cyan</span></div>
+        </div>
+        
+        <div id="panelR" class="glass">
+            <div class="ph R"><span>🤚</span><span>Right — Draw</span></div>
+            <div class="srow"><div class="dot" id="dotR"></div><span id="stxtR" class="stxt">Not detected</span></div>
+            <div id="ssubR" class="ssub">Show your right hand</div>
+        </div>
+
+        <div id="onlinePanel" class="glass">
+            <span class="online-dot"></span><span id="onlineLbl">Loading…</span>
+        </div>
+        <div id="usersList"></div>
+        <div id="panelInfo" class="glass">
+            <div class="pname-lbl" id="panelNameLbl">—</div>
+            <div class="powner-lbl" id="panelOwnerLbl">—</div>
+        </div>
+        <div id="guide" class="glass">
+            <h4>gestures</h4>
+            <div class="gcols">
+                <div class="gcol L">
+                        <h5>Left</h5>
+                        <div class="gi"><em>🤌</em><span>Pinch = Draw</span></div>
+                        <div class="gi"><em>🤙</em><span>Pinky+ring = Colors</span></div>
+                </div>
+                <div class="gcol R">
+                        <h5>Right</h5>
+                        <div class="gi"><em>☝</em><span>Index = Cursor</span></div>
+                        <div class="gi"><em>🤌</em><span>Pinch = Confirm color</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="bottomBar">
+            <button class="bbtn" id="swapBtn">Swap hands</button>
+            <button class="bbtn" id="backBtn">Leave panel</button>
+        </div>
+    </div>
+
+<script src="/config.js"></script>
+<script type="module" src="main.js"></script>
+</body>
+</html>

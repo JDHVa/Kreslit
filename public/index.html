@@ -20,7 +20,7 @@
                 <h1 class="ov-title">Welcome to AIR Drawing</h1>
                 <p class="ov-sub">If you want you can take a little tutorial to understand the gestures but.<br>
                 <span style="color:rgba(255,255,255,.25);font-size:.78rem">You can skip at any time during the tutorial.</span></p>
-                <button class="ov-btn" id="tutStartBtn">Start Tutorial</button>
+                <button class="bbtn" onclick="window.location.href='/tutorial/'">📖 Tutorial</button>
                 <button style="background:none;border:none;color:rgba(255,255,255,.22);font-size:.75rem;cursor:pointer;font-family:'Space Grotesk',sans-serif" id="tutSkipIntroBtn">Skip — go straight to drawing</button>
             </div>
         </div>
@@ -86,6 +86,8 @@
             <button class="bbtn" onclick="window.location.href='/collab/'">Collab panels</button>
         </div>
     
+
+    <!-- The css of overlay and tutorial screen is entirely made by gemini -->
     <div class="overlay hidden" id="tutorialScreen">
         <div id="tutCard" class="glass" style="max-width:420px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;padding:24px">
             <div id="tutStep" style="font-size:.7rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.08em"></div>
