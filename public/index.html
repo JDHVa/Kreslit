@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kreslit - Air Drawing</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="/config.js"></script>
 </head>
 <body>
     <div id="app">
@@ -13,6 +14,15 @@
             <div class="anillo"></div>
             <h1 class="ov-title">Loading...</h1>
             <p id="loadMsg" class="ov-sub">Loading MediaPipe, also i havent access to your camera or your draws so be confident because nobody except you can see your draws or your camera :)</p>
+        </div>
+        <div class="overlay hidden" id="tutorialIntro">
+            <div class="glass" style="max-width:400px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px">
+                <h1 class="ov-title">Welcome to AIR Drawing</h1>
+                <p class="ov-sub">If you want you can take a little tutorial to understand the gestures but.<br>
+                <span style="color:rgba(255,255,255,.25);font-size:.78rem">You can skip at any time during the tutorial.</span></p>
+                <button class="ov-btn" id="tutStartBtn">Start Tutorial</button>
+                <button style="background:none;border:none;color:rgba(255,255,255,.22);font-size:.75rem;cursor:pointer;font-family:'Space Grotesk',sans-serif" id="tutSkipIntroBtn">Skip — go straight to drawing</button>
+            </div>
         </div>
   
         <canvas id="canvas"></canvas>
@@ -73,8 +83,34 @@
             <button class="bbtn" id="undoBtn">Undo Create</button>
             <button class="bbtn" id="clearBtn">Clear</button>
             <button class="bbtn" id="analyzeBtn">AI analyzer</button>
+            <button class="bbtn" onclick="window.location.href='/collab/'">Collab panels</button>
         </div>
     
+    <div class="overlay hidden" id="tutorialScreen">
+        <div id="tutCard" class="glass" style="max-width:420px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;padding:24px">
+            <div id="tutStep" style="font-size:.7rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.08em"></div>
+            <div id="tutEmoji" style="font-size:3.5rem"></div>
+            <h2 id="tutTitle" style="font-size:1.3rem;font-weight:600"></h2>
+            <p id="tutDesc" style="font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.6"></p>
+            <div style="width:100%;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden">
+            <div id="tutBar" style="height:100%;background:linear-gradient(90deg,#00f5ff,#bf00ff);border-radius:3px;width:0%;transition:width .4s"></div>
+            </div>
+            <div id="tutDetect" style="font-size:.78rem;color:rgba(255,255,255,.3)">Waiting for gesture…</div>
+            <button id="tutSkipBtn" style="background:none;border:none;color:rgba(255,255,255,.22);font-size:.75rem;cursor:pointer;font-family:'Space Grotesk',sans-serif;margin-top:4px">Skip tutorial →</button>
+        </div>
+    </div>
+    <div id="tutorialScreen" class="overlay hidden">
+        <div id="tutCard" class="glass" style="max-width:420px;text-align:center;gap:14px;display:flex;flex-direction:column;align-items:center">
+            <div id="tutStep" style="font-size:.7rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.08em"></div>
+            <div id="tutEmoji" style="font-size:3.5rem"></div>
+            <h2 id="tutTitle" style="font-size:1.3rem;font-weight:600"></h2>
+            <p id="tutDesc" style="font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.6"></p>
+            <div id="tutProgress" style="width:100%;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden">
+            <div id="tutBar" style="height:100%;background:linear-gradient(90deg,#00f5ff,#bf00ff);border-radius:3px;width:0%;transition:width .4s"></div>
+            </div>
+            <div id="tutDetect" style="font-size:.78rem;color:rgba(255,255,255,.3)">Waiting for gesture…</div>
+            <button id="tutSkipBtn" style="background:none;border:none;color:rgba(255,255,255,.22);font-size:.75rem;cursor:pointer;font-family:'Space Grotesk',sans-serif;margin-top:4px">Skip tutorial →</button>
+        </div>
     </div>
     <script type="module" src="main.js"></script>
 </body>

@@ -81,6 +81,13 @@ app.post("/api/analyze", async (req, res) => {
   res.status(503).json({ error: "All the models fail" });
 });
 
+app.get("/config.js", (req, res) => {
+  res.setHeader("Content-Type", "application/javascript");
+  res.send(`
+    window.SUPABASE_URL = "${process.env.SUPABASE_URL}";
+    window.SUPABASE_ANON = "${process.env.SUPABASE_ANON_KEY}";
+    `);
+});
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`\nhttp://localhost:${PORT}\n`));
 

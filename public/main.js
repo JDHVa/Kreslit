@@ -91,7 +91,7 @@ function detectRaw(lms, side){
     const d = Math.hypot(lms[8].x-lms[4].x, lms[8].y-lms[4].y, lms[8].z-lms[4].z);
     return {
         pinch: d < PINCH_D,
-        pinky: !i && !m && r && p && !thumbExt,   // ring + angular = open color palette
+        pinky: !i && !m && r && p && !thumbExt,   // ring+pinky = open color palette
         peace: i && m && !r && !p && !thumbExt,    // peace = clear canvas
         three: i && m && r && !p && !thumbExt,     // 3 fingers = undo
         fist:  !i && !m && !r && !p && !thumbExt,  // fist = brush
@@ -163,6 +163,14 @@ function showCmd(state){
 }
 
 function executeCmd(){
+    // Tutorial flags
+    if(T.active){
+        if(S.leftState==='cmd_three') T.flags.didUndo=true;
+        if(S.leftState==='cmd_palm')  T.flags.didClear=true;
+        if(S.leftState==='cmd_fist')  T.flags.didBrush=true;
+        if(S.leftState==='cmd_thumb') T.flags.didAnalyze=true;
+        if(S.leftState==='cmd_peace') T.flags.didColorChange=(S.peaceHov!==null && S.peaceHov!==T.prevCi);
+    }
     switch(S.leftState){
         case 'cmd_peace': if(S.peaceHov!==null) setColor(S.peaceHov); break;
         case 'cmd_fist':  cycleBrush(); break;
@@ -191,12 +199,14 @@ function updateFSM(now){
         Lh.pinching = Lh.pinchFrames >= PINCH_CONFIRM;
     } else { Lh.pinchFrames=0; Lh.pinching=false; Lh.wasPinch=false; }
 
+    
     if(Rh.pinching && !Rh.wasPinch && S.leftState!=='idle' && S.leftState!=='draw'){
         executeCmd(); return;
     }
 
     const CD = 450;
 
+    // Modo borrar pero con un lapiz
     if(S.leftState === 'idle'){
         if(Rh.pinching){
             if(Lh.present){
@@ -212,7 +222,7 @@ function updateFSM(now){
         endErase(); S.eraseActive=false;
     }
 
-    // Made with AI
+    //  Modo borrar
     if(S.leftState === 'idle' && !S.eraseActive){
         if(!Lh.present){ showCmd(S.leftState); return; }
         if(Lh.pinching)                           S.leftState='draw';
@@ -223,6 +233,7 @@ function updateFSM(now){
         else if(Lg.thumb  && now-S.gestCD>CD)     { S.leftState='cmd_thumb'; S.gestCD=now; }
     }
 
+    // Modo dibujo
     if(S.leftState === 'draw'){
         if(!Lh.present || !Lh.pinching){ endStroke(); S.leftState='idle'; S.drawActive=false; return; }
         if(Rh.present){
@@ -231,7 +242,6 @@ function updateFSM(now){
         } else if(S.drawActive){ endStroke(); S.drawActive=false; }
         return;
     }
-
 
     if(Lh.present){
         if(S.leftState==='cmd_fist'  && !Lg.fist)   S.leftState='idle';
@@ -244,6 +254,7 @@ function updateFSM(now){
 
     if(S.leftState === 'cmd_peace' && Rh.present) updatePeaceHover(Rh.ip);
     showCmd(S.eraseActive ? 'erase' : S.leftState);
+    tutCheck();
 }
 
 function renderStroke(s, tc){
@@ -328,6 +339,7 @@ function drawWheelIfNeeded(){
 function drawCursors(){
     if(S.L.present && S.L.lms){
         if(S.eraseActive && S.L.ip){
+            // Eraser cursor on left index tip
             const pos = S.L.ip, bw = BRUSHES[S.bi].w;
             cx.save();
             cx.beginPath(); cx.arc(pos.x, pos.y, bw/2+6, 0, Math.PI*2);
@@ -444,7 +456,7 @@ async function analyze(){
         if(!res.ok){ const e=await res.json(); throw new Error(e.error||res.statusText); }
         const data=await res.json();
         const p = data;
-        if(p.provider) document.getElementById("aiTitle").textContent=`${p.provider} thinks`;
+        if(p.provider) document.getElementById("aiTitle").textContent=` ${p.provider} thinks`;
         if(p.texto){
             aiOCR.style.display="block";
             aiOCR.textContent=`"${p.texto}"`;
@@ -457,6 +469,109 @@ async function analyze(){
     }
     S.analyzing=false;
 }
+
+
+// Tutorial 
+const TUTORIAL_STEPS = [
+    {
+        emoji:"", title:"Draw a line",
+        desc:"Hold a <b>left pinch</b> (index+thumb on left hand), then trace with your <b>right index finger</b>. Draw any line to continue.",
+        check: (S,g) => S.strokes.length >= 1
+    },
+    {
+        emoji:"", title:"Erase something",
+        desc:"Hold a <b>right pinch</b> and move your <b>left index finger</b> over any stroke to erase it.",
+        check: (S,g) => S.eraseStrokes.length >= 1
+    },
+    {
+        emoji:"", title:"Undo a stroke",
+        desc:"Show <b>3 fingers</b> on your left hand (index, middle, ring), then <b>right pinch</b> to confirm.",
+        check: (S,g) => g.didUndo
+    },
+    {
+        emoji:"", title:"Open the color palette",
+        desc:"Extend your <b>ring + pinky fingers</b> on your left hand. The color wheel will appear.",
+        check: (S,g) => S.leftState === 'cmd_peace'
+    },
+    {
+        emoji:"", title:"Pick a color",
+        desc:"While the color wheel is open, <b>hover over a color</b> with your right index and <b>right pinch</b> to confirm.",
+        check: (S,g) => g.didColorChange
+    },
+    {
+        emoji:"", title:"Clear the canvas",
+        desc:"Make a <b>peace sign</b> (index+middle) with your left hand, then <b>right pinch</b> to confirm.",
+        check: (S,g) => g.didClear
+    },
+    {
+        emoji:"", title:"Change brush size",
+        desc:"Make a <b>fist</b> with your left hand, then <b>right pinch</b> to cycle through brush sizes.",
+        check: (S,g) => g.didBrush
+    },
+    {
+        emoji:"", title:"Analyze with AI",
+        desc:"<b>Draw something</b> first, then extend your <b>left thumb</b> and <b>right pinch</b> to send it to AI.",
+        check: (S,g) => g.didAnalyze
+    },
+];
+
+const T = {
+    active: false, step: 0,
+    flags: { didUndo:false, didColorChange:false, didClear:false, didBrush:false, didAnalyze:false },
+    prevCi: 0,
+};
+
+const tutorialScreen = document.getElementById("tutorialScreen");
+const tutStepEl  = document.getElementById("tutStep");
+const tutEmoji   = document.getElementById("tutEmoji");
+const tutTitle   = document.getElementById("tutTitle");
+const tutDesc    = document.getElementById("tutDesc");
+const tutBar     = document.getElementById("tutBar");
+const tutDetect  = document.getElementById("tutDetect");
+const tutSkipBtn = document.getElementById("tutSkipBtn");
+
+function tutRender(){
+    if(T.step >= TUTORIAL_STEPS.length){ tutEnd(); return; }
+    const s = TUTORIAL_STEPS[T.step];
+    tutStepEl.textContent = `Step ${T.step+1} of ${TUTORIAL_STEPS.length}`;
+    tutEmoji.textContent  = s.emoji;
+    tutTitle.textContent  = s.title;
+    tutDesc.innerHTML     = s.desc;
+    tutBar.style.width    = `${(T.step/TUTORIAL_STEPS.length)*100}%`;
+    tutDetect.textContent = "Waiting for gesture…";
+}
+
+function tutAdvance(){
+    tutDetect.textContent = "✓ Done!";
+    tutBar.style.width = `${((T.step+1)/TUTORIAL_STEPS.length)*100}%`;
+    setTimeout(()=>{
+        T.step++;
+        Object.keys(T.flags).forEach(k => T.flags[k]=false);
+        T.prevCi = S.ci;
+        tutRender();
+    }, 800);
+}
+
+function tutEnd(){
+    T.active = false;
+    tutorialScreen.classList.add("hidden");
+}
+
+function tutCheck(){
+    if(!T.active || T.step >= TUTORIAL_STEPS.length) return;
+    if(TUTORIAL_STEPS[T.step].check(S, T.flags)) tutAdvance();
+}
+
+function tutStart(){
+    T.active = true;
+    T.step = 0;
+    T.prevCi = S.ci;
+    Object.keys(T.flags).forEach(k => T.flags[k]=false);
+    tutorialScreen.classList.remove("hidden");
+    tutRender();
+}
+
+tutSkipBtn.addEventListener("click", tutEnd);
 
 let hl, lastVT = -1;
 
@@ -484,6 +599,7 @@ function loop(now){
             }
             if(!S.L.present){ S.L.buf=[]; S.L.pinchFrames=0; S.L.pinching=false; }
             if(!S.R.present){ S.R.buf=[]; S.R.pinchFrames=0; S.R.pinching=false; }
+            if(T.active) tutCheck();
             updateFSM(now);
             updateUI();
         }
@@ -491,6 +607,11 @@ function loop(now){
     drawFrame(now);
 }
 
+
+function showTutorialIntro(){
+    const intro = document.getElementById("tutorialIntro");
+    if(intro) intro.classList.remove("hidden");
+}
 async function startApp() {
     loadScreen.classList.remove("hidden");
     try {
@@ -508,7 +629,7 @@ async function startApp() {
             minHandPresenceConfidence:0.45,
             minTrackingConfidence:0.4
         });
-        loadMsg.textContent="Accessing the camera… also i dont have access to your camera or your draws so be confident because nobody except you can see your draws or your camera :)";
+        loadMsg.textContent="Accessing the camera…";
         const stream=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280},height:{ideal:720},facingMode:"user"}});
         vid.srcObject=stream;
         await new Promise(r=>{vid.onloadedmetadata=()=>{vid.play();r();};});
@@ -518,6 +639,7 @@ async function startApp() {
         loadScreen.classList.add("hidden");
         S.ready=true;
         requestAnimationFrame(loop);
+        showTutorialIntro();
     } catch(e){
         loadMsg.textContent="Error: "+e.message;
         console.error(e);
@@ -537,5 +659,11 @@ swapBtn.addEventListener("click",()=>{
 undoBtn.addEventListener("click",()=>undoLast());
 clearBtn.addEventListener("click",()=>{ S.strokes=[]; S.cur=null; S.eraseStrokes=[]; S.erCur=null; S.floats=[]; });
 analyzeBtn.addEventListener("click",()=>analyze());
-
+document.getElementById("tutStartBtn").addEventListener("click",()=>{
+    document.getElementById("tutorialIntro").classList.add("hidden");
+    tutStart();
+});
+document.getElementById("tutSkipIntroBtn").addEventListener("click",()=>{
+    document.getElementById("tutorialIntro").classList.add("hidden");
+});
 startApp();
