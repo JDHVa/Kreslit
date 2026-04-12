@@ -1,7 +1,7 @@
 import { createClient} from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
 const SUPABASE_URL  = window.SUPABASE_URL  || "";
-const SUPABASE_ANON = window.SUPABASE_ANON || "";
+const SUPABASE_ANON = window.SUPABASE_ANON_KEY || "";
 
 const MAX_PANELS = 20;
 

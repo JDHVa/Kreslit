@@ -5,7 +5,7 @@ import { createClient} from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@
 
 
 const SUPABASE_URL  = window.SUPABASE_URL  || "";
-const SUPABASE_ANON = window.SUPABASE_ANON || "";
+const SUPABASE_ANON = window.SUPABASE_ANON_KEY || "";
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
 let SWAP_HANDS = false;
