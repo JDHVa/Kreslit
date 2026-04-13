@@ -14,7 +14,6 @@ const PAL = [
     {n:"Red",v:"#ff2222"},{n:"White",v:"#ffffff"}
 ];
 
-// ─── Gesture definitions ──────────────────────────────────────────────────────
 const GESTURES = {
     draw: {
         id:"draw", emoji:"", name:"Draw a line",
