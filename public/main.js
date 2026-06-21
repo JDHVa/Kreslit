@@ -1,6 +1,182 @@
 import { HandLandmarker, FilesetResolver }
     from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/vision_bundle.mjs";
 
+// ── i18n ──────────────────────────────────────────────────
+const LANGS = {
+    en: {
+        // Loading & welcome
+        loading: "Loading...",
+        loadMsg: "Loading MediaPipe, also i havent access to your camera or your draws so be confident because nobody except you can see your draws or your camera :)",
+        welcome: "Welcome to AIR Drawing",
+        welcomeSub: 'If you want you can take a little tutorial to understand the gestures you can take it.<br><span style="color:rgba(255,255,255,.25);font-size:.78rem">You can skip at any time during the tutorial.</span>',
+        startTutorial: "Start - Tutorial",
+        skipTutorial: "Skip \u2014 go straight to drawing",
+        // Panels
+        leftHandLabel: "Left Hand \u2014 Commands",
+        rightHandLabel: "Right Hand \u2014 Draw / Execute",
+        noHandDetected: "No Hand Detected",
+        showLeftHand: "Show your left hand",
+        showRightHand: "Show your right hand",
+        detected: "Detected",
+        notDetected: "Not detected",
+        erasing: "Erasing",
+        pinch: "Pinch",
+        leftIndexErase: "Left index to erase",
+        drawWithIndex: "Draw with your index",
+        pinchToConfirm: "Pinch to confirm",
+        // Command bar
+        waitingPinch: "Waiting for right pinch...",
+        clickHere: "Click here too",
+        // Gestures guide
+        gestures: "Gestures",
+        leftHand: "Left Hand",
+        rightHand: "Right Hand",
+        gPinchDraw: "Pinch = Activate draw",
+        gPalm: "Palm = Nothing",
+        g3Fingers: "3 fingers = Undo Create",
+        gFist: "Fist = Pencil",
+        gPeace: "Peace = Clean",
+        gPinky: "Pinky + Angular = Colors",
+        gThumb: "Thumb = AI analyzer",
+        gIndex: "Index = Cursor",
+        gPinchConfirm: "Pinch = Confirm / Erase Mode",
+        // History & AI
+        historyTitle: "History of AI",
+        noAnalysis: "Without analysis",
+        aiOpinion: "Claude Opinion",
+        useThumbAnalyze: "Use \ud83d\udc4d to analyze your draw",
+        analyzing: "Analyzing\u2026",
+        aiThinks: "thinks",
+        // Bottom bar
+        turnHands: "Turn hands",
+        turnHandsActive: "Switch Hands (active)",
+        switchHands: "Switch hands",
+        undoCreate: "Undo Create",
+        clear: "Clear",
+        aiAnalyzer: "AI analyzer",
+        collabPanels: "Collab panels",
+        tutorial: "Tutorial",
+        // Tutorial overlay
+        waitingGesture: "Waiting for gesture\u2026",
+        skipTutBtn: "Skip tutorial \u2192",
+        done: "\u2713 Done!",
+        stepOf: "Step {0} of {1}",
+        // FSM / dynamic text
+        stIdle: "Waiting for a gesture",
+        stDraw: "Drawing Mode",
+        stPeace: "Choose a color \u2014 locked until selected",
+        stReady: "Ready \u2014 confirm",
+        cmdPeace: "Point a color \u00b7 Right Pinch or click to confirm",
+        cmdFist: "Right Pinch or click - change brush",
+        cmdThree: "Right Pinch or click - undo",
+        cmdPalm: "Right Pinch or click - clear all",
+        cmdThumb: "Right Pinch or click - analyze with AI",
+        cmdDraw: "Drawing \u2014 drop the left pinch to pause",
+        cmdErase: "Erasing \u2014 drop the right pinch to stop",
+        // Loading states
+        loadingModel: "Loading MediaPipe model\u2026",
+        accessingCamera: "Accessing the camera\u2026",
+        ready: "Ready!",
+        errorPrefix: "Error: ",
+        // Canvas labels
+        labelLeft: "LEFT",
+        labelRight: "RIGHT",
+    },
+    es: {
+        loading: "Cargando...",
+        loadMsg: "Cargando MediaPipe, no tengo acceso a tu c\u00e1mara ni a tus dibujos, as\u00ed que puedes estar tranquilo porque nadie excepto t\u00fa puede ver tus dibujos o tu c\u00e1mara :)",
+        welcome: "Bienvenido a AIR Drawing",
+        welcomeSub: 'Si quieres puedes tomar un peque\u00f1o tutorial para entender los gestos.<br><span style="color:rgba(255,255,255,.25);font-size:.78rem">Puedes saltarlo en cualquier momento.</span>',
+        startTutorial: "Iniciar - Tutorial",
+        skipTutorial: "Saltar \u2014 ir directo a dibujar",
+        leftHandLabel: "Mano Izquierda \u2014 Comandos",
+        rightHandLabel: "Mano Derecha \u2014 Dibujar / Ejecutar",
+        noHandDetected: "Mano no detectada",
+        showLeftHand: "Muestra tu mano izquierda",
+        showRightHand: "Muestra tu mano derecha",
+        detected: "Detectada",
+        notDetected: "No detectada",
+        erasing: "Borrando",
+        pinch: "Pellizco",
+        leftIndexErase: "\u00cdndice izq. para borrar",
+        drawWithIndex: "Dibuja con tu \u00edndice",
+        pinchToConfirm: "Pellizca para confirmar",
+        waitingPinch: "Esperando pellizco derecho...",
+        clickHere: "Clic aqu\u00ed tambi\u00e9n",
+        gestures: "Gestos",
+        leftHand: "Mano Izquierda",
+        rightHand: "Mano Derecha",
+        gPinchDraw: "Pellizco = Activar dibujo",
+        gPalm: "Palma = Nada",
+        g3Fingers: "3 dedos = Deshacer",
+        gFist: "Pu\u00f1o = L\u00e1piz",
+        gPeace: "Paz = Limpiar",
+        gPinky: "Me\u00f1ique + Anular = Colores",
+        gThumb: "Pulgar = Analizador IA",
+        gIndex: "\u00cdndice = Cursor",
+        gPinchConfirm: "Pellizco = Confirmar / Modo borrar",
+        historyTitle: "Historial de IA",
+        noAnalysis: "Sin an\u00e1lisis",
+        aiOpinion: "Opini\u00f3n de Claude",
+        useThumbAnalyze: "Usa \ud83d\udc4d para analizar tu dibujo",
+        analyzing: "Analizando\u2026",
+        aiThinks: "opina",
+        turnHands: "Invertir manos",
+        turnHandsActive: "Invertir manos (activo)",
+        switchHands: "Invertir manos",
+        undoCreate: "Deshacer",
+        clear: "Limpiar",
+        aiAnalyzer: "Analizador IA",
+        collabPanels: "Paneles collab",
+        tutorial: "Tutorial",
+        waitingGesture: "Esperando gesto\u2026",
+        skipTutBtn: "Saltar tutorial \u2192",
+        done: "\u2713 \u00a1Listo!",
+        stepOf: "Paso {0} de {1}",
+        stIdle: "Esperando un gesto",
+        stDraw: "Modo Dibujo",
+        stPeace: "Elige un color \u2014 bloqueado hasta seleccionar",
+        stReady: "Listo \u2014 confirma",
+        cmdPeace: "Apunta a un color \u00b7 Pellizco der. o clic para confirmar",
+        cmdFist: "Pellizco der. o clic - cambiar pincel",
+        cmdThree: "Pellizco der. o clic - deshacer",
+        cmdPalm: "Pellizco der. o clic - limpiar todo",
+        cmdThumb: "Pellizco der. o clic - analizar con IA",
+        cmdDraw: "Dibujando \u2014 suelta el pellizco izq. para pausar",
+        cmdErase: "Borrando \u2014 suelta el pellizco der. para parar",
+        loadingModel: "Cargando modelo MediaPipe\u2026",
+        accessingCamera: "Accediendo a la c\u00e1mara\u2026",
+        ready: "\u00a1Listo!",
+        errorPrefix: "Error: ",
+        labelLeft: "IZQ",
+        labelRight: "DER",
+    }
+};
+
+let currentLang = localStorage.getItem('kreslit-lang') || 'en';
+
+function t(key) {
+    return (LANGS[currentLang] && LANGS[currentLang][key]) || LANGS.en[key] || key;
+}
+
+function applyLang() {
+    console.log('[i18n] Switching to:', currentLang);
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (key) el.textContent = t(key);
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        if (key) el.innerHTML = t(key);
+    });
+    // Update the toggle button itself
+    const flagEl = document.getElementById('langFlag');
+    const codeEl = document.getElementById('langCode');
+    if (flagEl) flagEl.textContent = currentLang === 'en' ? '🇺🇸' : '🇲🇽';
+    if (codeEl) codeEl.textContent = currentLang === 'en' ? 'EN' : 'ES';
+    console.log('[i18n] Done. Elements updated:', document.querySelectorAll('[data-i18n]').length);
+}
+
 
 let SWAP_HANDS = false;
 const FPS_TARGET = 24;
@@ -147,17 +323,19 @@ function updatePeaceHover(rip) {
     S.peaceHov = null;
 }
 
-const CMD_INFO = {
-    cmd_peace:{e:"",t:"Point a color · Right Pinch or click to confirm"},
-    cmd_fist: {e:"",t:"Right Pinch or click - change brush"},
-    cmd_three:{e:"",t:"Right Pinch or click - undo"},
-    cmd_palm: {e:"",t:"Right Pinch or click - clear all"},
-    cmd_thumb:{e:"",t:"Right Pinch or click - analyze with AI"},
-    draw:     {e:"",t:"Drawing — drop the left pinch to pause"},
-    erase:    {e:"",t:"Erasing — drop the right pinch to stop"},
-};
+function getCmdInfo() {
+    return {
+        cmd_peace:{e:"",t:t('cmdPeace')},
+        cmd_fist: {e:"",t:t('cmdFist')},
+        cmd_three:{e:"",t:t('cmdThree')},
+        cmd_palm: {e:"",t:t('cmdPalm')},
+        cmd_thumb:{e:"",t:t('cmdThumb')},
+        draw:     {e:"",t:t('cmdDraw')},
+        erase:    {e:"",t:t('cmdErase')},
+    };
+}
 function showCmd(state){
-    const info = CMD_INFO[state];
+    const info = getCmdInfo()[state];
     if(info){ cmdEmoji.textContent = info.e; cmdText.textContent = info.t; cmdBar.classList.add("show"); }
     else{ cmdBar.classList.remove("show"); }
 }
@@ -379,11 +557,11 @@ function drawHandLabels(){
     cx.font="bold 11px 'Space Grotesk',sans-serif"; cx.textAlign="center";
     if(S.L.present && S.L.lms){
         const w=lm2c(S.L.lms[0]);
-        cx.fillStyle="rgba(0,245,255,.5)"; cx.fillText("LEFT",w.x,w.y-18);
+        cx.fillStyle="rgba(0,245,255,.5)"; cx.fillText(t('labelLeft'),w.x,w.y-18);
     }
     if(S.R.present && S.R.lms){
         const w=lm2c(S.R.lms[0]);
-        cx.fillStyle="rgba(191,0,255,.5)"; cx.fillText("RIGHT",w.x,w.y-18);
+        cx.fillStyle="rgba(191,0,255,.5)"; cx.fillText(t('labelRight'),w.x,w.y-18);
     }
 }
 
@@ -406,20 +584,23 @@ function drawFloats(now){
     }
 }
 
-const STATE_TEXT = {
-    idle:'Waiting for a gesture', draw:'Drawing Mode', cmd_peace:'Choose a color — locked until selected',
-    cmd_fist:'Ready — confirm', cmd_three:'Ready — confirm',
-    cmd_palm:'Ready — confirm', cmd_thumb:'Ready — confirm',
-};
+function getStateText() {
+    return {
+        idle: t('stIdle'), draw: t('stDraw'), cmd_peace: t('stPeace'),
+        cmd_fist: t('stReady'), cmd_three: t('stReady'),
+        cmd_palm: t('stReady'), cmd_thumb: t('stReady'),
+    };
+}
 
 function updateUI(){
-    if(S.L.present){ dotL.classList.add("on"); stxtL.textContent="Detected"; ssubL.textContent=STATE_TEXT[S.leftState]||""; }
-    else{ dotL.classList.remove("on"); stxtL.textContent="Not detected"; ssubL.textContent="Show your left hand"; }
+    const ST = getStateText();
+    if(S.L.present){ dotL.classList.add("on"); stxtL.textContent=t('detected'); ssubL.textContent=ST[S.leftState]||""; }
+    else{ dotL.classList.remove("on"); stxtL.textContent=t('notDetected'); ssubL.textContent=t('showLeftHand'); }
     if(S.R.present){
         dotR.classList.add("on");
-        stxtR.textContent = S.eraseActive ? "Erasing" : S.R.pinching ? "Pinch" : "Detected";
-        ssubR.textContent = S.eraseActive ? "Left index to erase" : S.leftState==='draw' ? "Draw with your index" : "Pinch to confirm";
-    } else{ dotR.classList.remove("on"); stxtR.textContent="Not detected"; ssubR.textContent="Show your right hand"; }
+        stxtR.textContent = S.eraseActive ? t('erasing') : S.R.pinching ? t('pinch') : t('detected');
+        ssubR.textContent = S.eraseActive ? t('leftIndexErase') : S.leftState==='draw' ? t('drawWithIndex') : t('pinchToConfirm');
+    } else{ dotR.classList.remove("on"); stxtR.textContent=t('notDetected'); ssubR.textContent=t('showRightHand'); }
 }
 
 function addHistory(text){
@@ -435,7 +616,7 @@ async function analyze(){
     S.analyzing=true;
     aiPanel.classList.remove("hidden");
     aiOCR.style.display="none";
-    aiComment.innerHTML=`<div class="lrow"><div class="mspin"></div>Analyzing…</div>`;
+    aiComment.innerHTML=`<div class="lrow"><div class="mspin"></div>${t('analyzing')}</div>`;
     try{
         const off=document.createElement("canvas");
         off.width=cv.width; off.height=cv.height;
@@ -454,7 +635,7 @@ async function analyze(){
         if(!res.ok){ const e=await res.json(); throw new Error(e.error||res.statusText); }
         const data=await res.json();
         const p = data;
-        if(p.provider) document.getElementById("aiTitle").textContent=` ${p.provider} thinks`;
+        if(p.provider) document.getElementById("aiTitle").textContent=` ${p.provider} ${t('aiThinks')}`;
         if(p.texto){
             aiOCR.style.display="block";
             aiOCR.textContent=`"${p.texto}"`;
@@ -531,16 +712,16 @@ const tutSkipBtn = document.getElementById("tutSkipBtn");
 function tutRender(){
     if(T.step >= TUTORIAL_STEPS.length){ tutEnd(); return; }
     const s = TUTORIAL_STEPS[T.step];
-    tutStepEl.textContent = `Step ${T.step+1} of ${TUTORIAL_STEPS.length}`;
+    tutStepEl.textContent = t('stepOf').replace('{0}', T.step+1).replace('{1}', TUTORIAL_STEPS.length);
     tutEmoji.textContent  = s.emoji;
     tutTitle.textContent  = s.title;
     tutDesc.innerHTML     = s.desc;
     tutBar.style.width    = `${(T.step/TUTORIAL_STEPS.length)*100}%`;
-    tutDetect.textContent = "Waiting for gesture…";
+    tutDetect.textContent = t('waitingGesture');
 }
 
 function tutAdvance(){
-    tutDetect.textContent = "✓ Done!";
+    tutDetect.textContent = t('done');
     tutBar.style.width = `${((T.step+1)/TUTORIAL_STEPS.length)*100}%`;
     setTimeout(()=>{
         T.step++;
@@ -613,7 +794,7 @@ function showTutorialIntro(){
 async function startApp() {
     loadScreen.classList.remove("hidden");
     try {
-        loadMsg.textContent="Loading MediaPipe model…";
+        loadMsg.textContent=t('loadingModel');
         const fs=await FilesetResolver.forVisionTasks(
             "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm");
         hl=await HandLandmarker.createFromOptions(fs,{
@@ -627,19 +808,19 @@ async function startApp() {
             minHandPresenceConfidence:0.45,
             minTrackingConfidence:0.4
         });
-        loadMsg.textContent="Accessing the camera…";
+        loadMsg.textContent=t('accessingCamera');
         const stream=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280},height:{ideal:720},facingMode:"user"}});
         vid.srcObject=stream;
         await new Promise(r=>{vid.onloadedmetadata=()=>{vid.play();r();};});
         setColor(0);
-        loadMsg.textContent="Ready!";
+        loadMsg.textContent=t('ready');
         await new Promise(r=>setTimeout(r,600));
         loadScreen.classList.add("hidden");
         S.ready=true;
         requestAnimationFrame(loop);
         showTutorialIntro();
     } catch(e){
-        loadMsg.textContent="Error: "+e.message;
+        loadMsg.textContent=t('errorPrefix')+e.message;
         console.error(e);
     }
 }
@@ -651,7 +832,7 @@ closeAI.addEventListener("click",()=>aiPanel.classList.add("hidden"));
 swapBtn.addEventListener("click",()=>{
     SWAP_HANDS=!SWAP_HANDS;
     swapBtn.classList.toggle("active",SWAP_HANDS);
-    swapBtn.textContent=SWAP_HANDS?"Switch Hands (active)":"Switch hands";
+    swapBtn.textContent=SWAP_HANDS?t('turnHandsActive'):t('switchHands');
     S.L.buf=[]; S.R.buf=[]; S.leftState='idle';
 });
 undoBtn.addEventListener("click",()=>undoLast());
@@ -660,4 +841,13 @@ analyzeBtn.addEventListener("click",()=>analyze());
 document.getElementById("tutSkipIntroBtn").addEventListener("click",()=>{
     document.getElementById("tutorialIntro").classList.add("hidden");
 });
+// ── Language toggle ──
+const langToggle = document.getElementById('langToggle');
+langToggle.addEventListener('click', () => {
+    currentLang = currentLang === 'en' ? 'es' : 'en';
+    localStorage.setItem('kreslit-lang', currentLang);
+    applyLang();
+});
+
+applyLang();
 startApp();

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kreslit - Air Drawing</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=2">
     <script src="/config.js"></script>
 </head>
 <body>
@@ -12,81 +12,83 @@
     
         <div class="overlay hidden" id="loadScreen">
             <div class="anillo"></div>
-            <h1 class="ov-title">Loading...</h1>
-            <p id="loadMsg" class="ov-sub">Loading MediaPipe, also i havent access to your camera or your draws so be confident because nobody except you can see your draws or your camera :)</p>
+            <h1 class="ov-title" data-i18n="loading">Loading...</h1>
+            <p id="loadMsg" class="ov-sub" data-i18n="loadMsg">Loading MediaPipe, also i havent access to your camera or your draws so be confident because nobody except you can see your draws or your camera :)</p>
         </div>
         <div class="overlay hidden" id="tutorialIntro">
             <div class="glass" style="max-width:400px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px">
-                <h1 class="ov-title">Welcome to AIR Drawing</h1>
-                <p class="ov-sub">If you want you can take a little tutorial to understand the gestures you can take it.<br>
+                <h1 class="ov-title" data-i18n="welcome">Welcome to AIR Drawing</h1>
+                <p class="ov-sub" data-i18n-html="welcomeSub">If you want you can take a little tutorial to understand the gestures you can take it.<br>
                 <span style="color:rgba(255,255,255,.25);font-size:.78rem">You can skip at any time during the tutorial.</span></p>
-                <button class="ov-btn" onclick="window.location.href='/tutorial/'"> Start - Tutorial</button>                
-                <button id="tutSkipIntroBtn">Skip — go straight to drawing</button>
+                <button class="ov-btn" onclick="window.location.href='/tutorial/'" data-i18n="startTutorial"> Start - Tutorial</button>                
+                <button id="tutSkipIntroBtn" data-i18n="skipTutorial">Skip — go straight to drawing</button>
             </div>
         </div>
   
         <canvas id="canvas"></canvas>
             
         <div id="panelL" class="cristal">
-            <div class="ph Izq"><span></span><span>Left Hand — Commands</span></div>
-            <div class="srow"><div class="punto" id="dotL"></div><span id="stxtL" class="stxt">No Hand Detected</span></div>
-            <div id="ssubL" class="ssub">Show your left hand</div>
+            <div class="ph Izq"><span></span><span data-i18n="leftHandLabel">Left Hand — Commands</span></div>
+            <div class="srow"><div class="punto" id="dotL"></div><span id="stxtL" class="stxt" data-i18n="noHandDetected">No Hand Detected</span></div>
+            <div id="ssubL" class="ssub" data-i18n="showLeftHand">Show your left hand</div>
             <div class="crow"><div class="csw" id="cswL"></div><span id="cnameL">Cyan</span>&nbsp;·&nbsp;<span id="brushLbl">Medium</span></div>
         </div>
         
         <div id="panelR" class="cristal">
-            <div class="ph der"><span></span><span>Right Hand — Draw / Execute</span></div>
-            <div class="srow"><div class="punto" id="dotR"></div><span id="stxtR" class="stxt">No Hand Detected</span></div>
-            <div id="ssubR" class="ssub">Show your right hand</div>
+            <div class="ph der"><span></span><span data-i18n="rightHandLabel">Right Hand — Draw / Execute</span></div>
+            <div class="srow"><div class="punto" id="dotR"></div><span id="stxtR" class="stxt" data-i18n="noHandDetected">No Hand Detected</span></div>
+            <div id="ssubR" class="ssub" data-i18n="showRightHand">Show your right hand</div>
         </div>
     
         <div id="cmdBar" class="cristal">
             <span id="cmdEmoji">✊</span>
-            <span id="cmdText">Waiting for right pinch...</span>
-            <button id="cmdMouseBtn">Click here too</button>
+            <span id="cmdText" data-i18n="waitingPinch">Waiting for right pinch...</span>
+            <button id="cmdMouseBtn" data-i18n="clickHere">Click here too</button>
         </div>
     
         <div id="guide" class="cristal">
-            <h4>Gestures</h4>
+            <h4 data-i18n="gestures">Gestures</h4>
             <div class="gcols">
                 <div class="gcol L">
-                    <h5>Left Hand</h5>
-                    <div class="gi"><em>🤌</em><span>Pinch = Activate draw</span></div>
-                    <div class="gi"><em>🖐</em><span>Palm = Nothing</span></div>
-                    <div class="gi"><em>3️⃣</em><span>3 fingers = Undo Create</span></div>
-                    <div class="gi"><em>✊</em><span>Fist = Pencil</span></div>
-                    <div class="gi"><em>✌</em><span>Peace = Clean</span></div>
-                    <div class="gi"><em>🤙</em><span>Pinky + Angular = Colors</span></div>
-                    <div class="gi"><em>👍</em><span>Thumb = AI analyzer</span></div>
+                    <h5 data-i18n="leftHand">Left Hand</h5>
+                    <div class="gi"><em>🤌</em><span data-i18n="gPinchDraw">Pinch = Activate draw</span></div>
+                    <div class="gi"><em>🖐</em><span data-i18n="gPalm">Palm = Nothing</span></div>
+                    <div class="gi"><em>3️⃣</em><span data-i18n="g3Fingers">3 fingers = Undo Create</span></div>
+                    <div class="gi"><em>✊</em><span data-i18n="gFist">Fist = Pencil</span></div>
+                    <div class="gi"><em>✌</em><span data-i18n="gPeace">Peace = Clean</span></div>
+                    <div class="gi"><em>🤙</em><span data-i18n="gPinky">Pinky + Angular = Colors</span></div>
+                    <div class="gi"><em>👍</em><span data-i18n="gThumb">Thumb = AI analyzer</span></div>
                 </div>
                 <div class="gcol R">
-                    <h5>Right Hand</h5>
-                    <div class="gi"><em>☝</em><span>Index = Cursor</span></div>
-                    <div class="gi"><em>🤌</em><span>Pinch = Confirm / Erase Mode</span></div>
+                    <h5 data-i18n="rightHand">Right Hand</h5>
+                    <div class="gi"><em>☝</em><span data-i18n="gIndex">Index = Cursor</span></div>
+                    <div class="gi"><em>🤌</em><span data-i18n="gPinchConfirm">Pinch = Confirm / Erase Mode</span></div>
                 </div>
             </div>
         </div>
     
         <div id="histPanel" class="cristal">
-            <h3>History of AI</h3>
-            <div id="hlist"><div class="hempty">Without analysis</div></div>
+            <h3 data-i18n="historyTitle">History of AI</h3>
+            <div id="hlist"><div class="hempty" data-i18n="noAnalysis">Without analysis</div></div>
         </div>
         
         <div id="aiPanel" class="cristal hidden">
-            <div id="aiHead"><span id="aiTitle">Claude Opinion</span><button id="closeAI"></button></div>
+            <div id="aiHead"><span id="aiTitle" data-i18n="aiOpinion">Claude Opinion</span><button id="closeAI"></button></div>
             <div id="aiOCR"></div>
-            <div id="aiComment">Use 👍 to analyze your draw</div>
+            <div id="aiComment" data-i18n="useThumbAnalyze">Use 👍 to analyze your draw</div>
         </div>
     
         <div id="bottomBar">
-            <button class="bbtn" id="swapBtn">Turn hands</button>
-            <button class="bbtn" id="undoBtn">Undo Create</button>
-            <button class="bbtn" id="clearBtn">Clear</button>
-            <button class="bbtn" id="analyzeBtn">AI analyzer</button>
-            <button class="bbtn" onclick="window.location.href='/collab/'">Collab panels</button>
-            <button class="bbtn" onclick="window.location.href='/tutorial/'">Tutorial</button>
+            <button class="bbtn" id="swapBtn" data-i18n="turnHands">Turn hands</button>
+            <button class="bbtn" id="undoBtn" data-i18n="undoCreate">Undo Create</button>
+            <button class="bbtn" id="clearBtn" data-i18n="clear">Clear</button>
+            <button class="bbtn" id="analyzeBtn" data-i18n="aiAnalyzer">AI analyzer</button>
+            <button class="bbtn" onclick="window.location.href='/collab/'" data-i18n="collabPanels">Collab panels</button>
+            <button class="bbtn" onclick="window.location.href='/tutorial/'" data-i18n="tutorial">Tutorial</button>
+            <button class="bbtn lang-btn" id="langToggle"><span id="langFlag">🇺🇸</span> <span id="langCode">EN</span></button>
 
         </div>
+
     
     <div class="overlay hidden" id="tutorialScreen">
         <div id="tutCard" class="glass" style="max-width:420px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;padding:24px">
@@ -97,8 +99,8 @@
             <div>
             <div id="tutBar"></div>
             </div>
-            <div id="tutDetect">Waiting for gesture…</div>
-            <button id="tutSkipBtn">Skip tutorial →</button>
+            <div id="tutDetect" data-i18n="waitingGesture">Waiting for gesture…</div>
+            <button id="tutSkipBtn" data-i18n="skipTutBtn">Skip tutorial →</button>
         </div>
     </div>
     <div id="tutorialScreen" class="overlay hidden">
@@ -110,11 +112,11 @@
             <div id="tutProgress">
             <div id="tutBar"></div>
             </div>
-            <div id="tutDetect">Waiting for gesture…</div>
-            <button id="tutSkipBtn">Skip tutorial →</button>
+            <div id="tutDetect" data-i18n="waitingGesture">Waiting for gesture…</div>
+            <button id="tutSkipBtn" data-i18n="skipTutBtn">Skip tutorial →</button>
         </div>
     </div>
-    <script type="module" src="main.js"></script>
+    <script type="module" src="main.js?v=2"></script>
 </body>
 </html>
 

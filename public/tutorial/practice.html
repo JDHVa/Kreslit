@@ -5,23 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kreslit - Practice</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="styles.css"/>
+    <link rel="stylesheet" href="styles.css?v=2"/>
 </head>
 <body>
     <div id="loadScreen">
         <div class="ring"></div>
-        <div class="l-title">Loading...</div>
-        <div id="loadMsg" class="l-sub">Starting MediaPipe, remember i don't have access to your camera</div>
+        <div class="l-title" data-i18n="load_title">Loading...</div>
+        <div id="loadMsg" class="l-sub" data-i18n="load_msg">Starting MediaPipe, remember i don't have access to your camera</div>
     </div>
 
     <div id="main">
         <div id="camSide">
             <canvas id="canvas"></canvas>
-            <div id="gestureHint">Show your hand to the camera</div>
+            <div id="gestureHint" data-i18n="gesture_hint">Show your hand to the camera</div>
         </div>
 
         <div id="instrPanel">
-            <a href="index.html" class="back-link">- All gestures</a>
+            <a href="index.html" class="back-link" data-i18n="all_gestures">- All gestures</a>
 
             <div>
                 <div class="gesture-emoji" id="gEmoji"></div>
@@ -40,23 +40,27 @@
                     <div id="progLabel">0%</div>
                 </div>
                 <div id="detectIcon"></div>
-                <div id="detectMsg">Perform the gesture <br> and hold it steady</div>
+                <div id="detectMsg" data-i18n="detect_msg">Perform the gesture <br> and hold it steady</div>
                 <div id="handDots">
-                    <div class="hdot"><div class="hdot-circle" id="hdotL"></div><span>Left</span></div>
-                    <div class="hdot"><div class="hdot-circle" id="hdotR"></div><span>Right</span></div>
+                    <div class="hdot"><div class="hdot-circle" id="hdotL"></div><span data-i18n="left_hand">Left</span></div>
+                    <div class="hdot"><div class="hdot-circle" id="hdotR"></div><span data-i18n="right_hand">Right</span></div>
                 </div>
             </div>
 
             <div id="successArea">
                 <div class="success-emoji"></div>
-                <div class="success-msg">Perfect! Gesture detected.</div>
+                <div class="success-msg" data-i18n="success_msg">Perfect! Gesture detected.</div>
                 <div class="success-sub" id="successSub"></div>
-                <button class="btn-next" id="nextBtn">Next gesture →</button>
-                <button class="btn-list" id="listBtn">Back to list</button>
+                <button class="btn-next" id="nextBtn" data-i18n="next_btn">Next gesture →</button>
+                <button class="btn-list" id="listBtn" data-i18n="back_list">Back to list</button>
             </div>
         </div>
     </div>
 
-<script type="module" src="main.js"></script>
+    <button class="lang-btn" id="langToggle" style="position: absolute; bottom: 20px; right: 20px; z-index: 100;">
+        <span id="langFlag">🇺🇸</span>
+        <span id="langCode">EN</span>
+    </button>
+<script type="module" src="main.js?v=2"></script>
 </body>
 </html>

@@ -435,3 +435,26 @@ h1 {
     pointer-events: none
 
   }
+
+/* ── Language Toggle ── */
+.lang-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border-color: rgba(0,245,255,.25) !important;
+    color: #00f5ff !important;
+    padding: 6px 12px;
+    cursor: pointer;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(0,245,255,.25);
+    border-radius: 10px;
+    font-family: 'Space Grotesk',sans-serif;
+    font-size: .73rem;
+    font-weight: 600;
+}
+
+.lang-btn:hover {
+    background: rgba(0,245,255,.12) !important;
+    border-color: rgba(0,245,255,.45) !important;
+    box-shadow: 0 0 10px rgba(0,245,255,.15);
+}

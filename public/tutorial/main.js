@@ -1,5 +1,33 @@
-import { HandLandmarker, FilesetResolver }
     from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/vision_bundle.mjs";
+
+const LANGS = {
+    en: { load_title: "Loading...", load_msg: "Starting MediaPipe, remember i don't have access to your camera", gesture_hint: "Show your hand to the camera", all_gestures: "- All gestures", detect_msg: "Perform the gesture <br> and hold it steady", left_hand: "Left", right_hand: "Right", success_msg: "Perfect! Gesture detected.", next_btn: "Next gesture →", back_list: "Back to list", success_sub: "You can now use this gesture in AIR Drawing!", gesture_completed: "🎉 Gesture completed!", left_label: "LEFT", right_label: "RIGHT", undo_this: "← undo this", current_color: "Current color:", brush_brush: "brush", loading_mediapipe: "Loading MediaPipe…", accessing_camera: "Accessing camera…", ready: "Ready!", error: "Error: ", next: "Next: " },
+    es: { load_title: "Cargando...", load_msg: "Iniciando MediaPipe, recuerda que no tengo acceso a tu cámara", gesture_hint: "Muestra tu mano a la cámara", all_gestures: "- Todos los gestos", detect_msg: "Realiza el gesto <br> y mantenlo firme", left_hand: "Izq", right_hand: "Der", success_msg: "¡Perfecto! Gesto detectado.", next_btn: "Siguiente gesto →", back_list: "Volver a la lista", success_sub: "¡Ya puedes usar este gesto en AIR Drawing!", gesture_completed: "🎉 ¡Gesto completado!", left_label: "IZQ", right_label: "DER", undo_this: "← deshacer esto", current_color: "Color actual:", brush_brush: "pincel", loading_mediapipe: "Cargando MediaPipe…", accessing_camera: "Accediendo a la cámara…", ready: "¡Listo!", error: "Error: ", next: "Siguiente: " }
+};
+
+const GESTURES_ES = {
+    draw: { name:"Dibujar una línea", desc:"Mantén un <b>pellizco izquierdo</b> y traza con tu <b>dedo índice derecho</b>.", hands:[{label:"Pellizco izq.",side:"L"},{label:"Índice der.",side:"R"}], hint:"Pellizco izq. + mover índice der." },
+    erase: { name:"Borrar", desc:"Mantén un <b>pellizco derecho</b> y mueve tu <b>dedo índice izquierdo</b> para borrar.", hands:[{label:"Pellizco der.",side:"R"},{label:"Índice izq.",side:"L"}], hint:"Pellizco der. + mover índice izq." },
+    undo: { name:"Deshacer", desc:"Muestra <b>3 dedos</b> (índice, medio, anular) con tu mano izquierda, luego <b>pellizco derecho</b>.", hands:[{label:"3 dedos izq.",side:"L"},{label:"Pellizco der.",side:"R"}], hint:"3 dedos izq. → Pellizco der." },
+    color: { name:"Abrir paleta de colores", desc:"Extiende los dedos <b>anular + meñique</b> de tu mano izquierda, luego <b>pellizco derecho</b> para elegir color.", hands:[{label:"Meñique + anular izq.",side:"L"},{label:"Pellizco der.",side:"R"}], hint="Anular + meñique, luego pellizco der. en un color" },
+    clear: { name:"Limpiar lienzo", desc:"Haz la <b>señal de paz</b> con tu mano izquierda, luego <b>pellizco derecho</b> para limpiar.", hands:[{label:"Paz izq.",side:"L"},{label:"Pellizco der.",side:"R"}], hint="Señal de paz izq. → Pellizco der." },
+    brush: { name:"Cambiar tamaño de pincel", desc:"Haz un <b>puño</b> con tu mano izquierda, luego <b>pellizco derecho</b> para cambiar tamaño.", hands:[{label:"Puño izq.",side:"L"},{label:"Pellizco der.",side:"R"}], hint="Puño izq. → Pellizco der." },
+    ai: { name:"Analizar con IA", desc="Extiende tu <b>pulgar izquierdo</b>, luego <b>pellizco derecho</b> para enviar a la IA.", hands:[{label:"Pulgar izq.",side:"L"},{label:"Pellizco der.",side:"R"}], hint="Pulgar izq. → Pellizco der." }
+};
+
+let currentLang = localStorage.getItem('kreslit-lang') || 'en';
+function t(key) { return (LANGS[currentLang] && LANGS[currentLang][key]) || LANGS.en[key] || key; }
+function applyLang() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (key) el.innerHTML = t(key);
+    });
+    const flagEl = document.getElementById('langFlag');
+    const codeEl = document.getElementById('langCode');
+    if (flagEl) flagEl.textContent = currentLang === 'en' ? '🇺🇸' : '🇲🇽';
+    if (codeEl) codeEl.textContent = currentLang === 'en' ? 'EN' : 'ES';
+    populateUI();
+}
 
 let SWAP_HANDS = false;
 const FPS_TARGET = 24;
@@ -14,7 +42,6 @@ const PAL = [
     {n:"Red",v:"#ff2222"},{n:"White",v:"#ffffff"}
 ];
 
-// ─── Gesture definitions ──────────────────────────────────────────────────────
 const GESTURES = {
     draw: {
         id:"draw", emoji:"", name:"Draw a line",
@@ -182,16 +209,23 @@ const gestureId = params.get("g") || "draw";
 const gesture   = GESTURES[gestureId] || GESTURES.draw;
 
 function populateUI(){
-    gEmoji.textContent = gesture.emoji;
-    gName.textContent  = gesture.name;
-    gDesc.innerHTML    = gesture.desc;
-    gestureHint.textContent = gesture.hint;
-    gHands.innerHTML = gesture.hands.map(h=>
+    const curGest = (currentLang === 'es' && GESTURES_ES[gestureId]) ? { ...gesture, ...GESTURES_ES[gestureId] } : gesture;
+    gEmoji.textContent = curGest.emoji;
+    gName.textContent  = curGest.name;
+    gDesc.innerHTML    = curGest.desc;
+    gestureHint.textContent = curGest.hint;
+    gHands.innerHTML = curGest.hands.map(h=>
         `<span class="hand-badge ${h.side}">${h.label}</span>`
     ).join("");
-    const nextG = GESTURES[gesture.next];
-    nextBtn.textContent = nextG ? `Next: ${nextG.name} →` : "Back to list";
-    successSub.textContent = "You can now use this gesture in AIR Drawing!";
+    const nextGId = gesture.next;
+    const nextGBase = GESTURES[nextGId];
+    if (nextGBase) {
+        const nextG = (currentLang === 'es' && GESTURES_ES[nextGId]) ? { ...nextGBase, ...GESTURES_ES[nextGId] } : nextGBase;
+        nextBtn.textContent = t('next') + nextG.name + " →";
+    } else {
+        nextBtn.textContent = t('back_list');
+    }
+    successSub.textContent = t('success_sub');
 }
 populateUI();
 
@@ -364,7 +398,7 @@ function showSuccess(){
     S.done=true;
     detectArea.classList.add("hide");
     successArea.classList.add("show");
-    gestureHint.textContent="🎉 Gesture completed!";
+    gestureHint.textContent=t('gesture_completed');
 }
 
 function renderStroke(s,tc,alpha){
@@ -411,7 +445,7 @@ function drawFrame(){
         for(const s of S.demoStrokes) renderStroke(s,cx);
         if(S.demoStrokes.length>0){
             cx.save(); cx.font="bold 12px 'Space Grotesk',sans-serif"; cx.textAlign="center";
-            cx.fillStyle="rgba(255,255,255,.3)"; cx.fillText("← undo this",cv.width*.65,cv.height*.35);
+            cx.fillStyle="rgba(255,255,255,.3)"; cx.fillText(t('undo_this'),cv.width*.65,cv.height*.35);
             cx.restore();
         }
     }
@@ -423,7 +457,7 @@ function drawFrame(){
     if(gestureId==="color"){
         cx.save(); cx.font="bold 13px 'Space Grotesk',sans-serif"; cx.textAlign="center";
         cx.fillStyle=PAL[S.ci].v; cx.shadowColor=PAL[S.ci].v; cx.shadowBlur=14;
-        cx.fillText(`Current color: ${PAL[S.ci].n}`, W/2, H*0.12);
+        cx.fillText(`${t('current_color')} ${PAL[S.ci].n}`, W/2, H*0.12);
         cx.restore();
         if(S.peaceOpen) drawWheel();
     }
@@ -435,7 +469,7 @@ function drawFrame(){
         cx.fillStyle=PAL[S.ci].v; cx.shadowColor=PAL[S.ci].v; cx.shadowBlur=16; cx.fill();
         cx.font="bold 13px 'Space Grotesk',sans-serif"; cx.textAlign="center";
         cx.fillStyle="rgba(255,255,255,.4)"; cx.shadowBlur=0;
-        cx.fillText(`${S.brushLabels[S.brushIdx]} brush`, W/2, H/2+bw/2+22);
+        cx.fillText(`${S.brushLabels[S.brushIdx]} ${t('brush_brush')}`, W/2, H/2+bw/2+22);
         cx.restore();
     }
 
@@ -484,11 +518,11 @@ function drawHandLabels(){
     cx.font="bold 11px 'Space Grotesk',sans-serif"; cx.textAlign="center";
     if(S.L.present && S.L.lms){
         const w=lm2c(S.L.lms[0]);
-        cx.fillStyle="rgba(0,245,255,.5)"; cx.fillText("LEFT",w.x,w.y-18);
+        cx.fillStyle="rgba(0,245,255,.5)"; cx.fillText(t('left_label'),w.x,w.y-18);
     }
     if(S.R.present && S.R.lms){
         const w=lm2c(S.R.lms[0]);
-        cx.fillStyle="rgba(191,0,255,.5)"; cx.fillText("RIGHT",w.x,w.y-18);
+        cx.fillStyle="rgba(191,0,255,.5)"; cx.fillText(t('right_label'),w.x,w.y-18);
     }
 }
 
@@ -560,7 +594,7 @@ listBtn.addEventListener("click",()=>window.location.href="index.html");
 
 async function init(){
     try{
-        loadMsg.textContent="Loading MediaPipe…";
+        loadMsg.textContent=t('loading_mediapipe');
         const fs=await FilesetResolver.forVisionTasks(
             "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm");
         hl=await HandLandmarker.createFromOptions(fs,{
@@ -573,14 +607,14 @@ async function init(){
             minHandPresenceConfidence:0.45,
             minTrackingConfidence:0.4
         });
-        loadMsg.textContent="Accessing camera…";
+        loadMsg.textContent=t('accessing_camera');
         const stream=await navigator.mediaDevices.getUserMedia({
             video:{width:{ideal:1280},height:{ideal:720},facingMode:"user"}
         });
         vid.srcObject=stream;
         await new Promise(r=>{vid.onloadedmetadata=()=>{vid.play();r();};});
         spawnDemoStrokes();
-        loadMsg.textContent="Ready!";
+        loadMsg.textContent=t('ready');
         await new Promise(r=>setTimeout(r,500));
         loadScreen.classList.add("fade");
         await new Promise(r=>setTimeout(r,500));
@@ -588,8 +622,18 @@ async function init(){
         S.ready=true;
         requestAnimationFrame(loop);
     } catch(e){
-        loadMsg.textContent="Error: "+e.message;
+        loadMsg.textContent=t('error')+e.message;
         console.error(e);
     }
 }
+
+const langToggle = document.getElementById('langToggle');
+if(langToggle) {
+    langToggle.addEventListener('click', () => {
+        currentLang = currentLang === 'en' ? 'es' : 'en';
+        localStorage.setItem('kreslit-lang', currentLang);
+        applyLang();
+    });
+}
+applyLang();
 init();

@@ -5,67 +5,156 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kreslit - Tutorial</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="styles.css"/>
+    <link rel="stylesheet" href="styles.css?v=2"/>
 </head>
 <body>
-    <h1>Tutorial Mode</h1>
-    <p class="sub">Pick a gesture to practice. The camera will detect if you are doing it correctly*(You can see all the gestures in the README.md). </p>
+    <h1 data-i18n="title">Tutorial Mode</h1>
+    <p class="sub" data-i18n="sub">Pick a gesture to practice. The camera will detect if you are doing it correctly*(You can see all the gestures in the README.md). </p>
     <div class="container">
-        <div class="section-title">Drawing</div>
+        <div class="section-title" data-i18n="sec_drawing">Drawing</div>
         <a href="practice.html?g=draw" class="card">
             <div class="card-body">
-                <div class="card-title">Draw a line</div>
-                <div class="card-desc">Hold a left pinch and trace with your right index finger.</div>
-                <div class="card-hands"><span class="hand-badge L">Left pinch</span><span class="hand-badge R">Right index</span></div>
+                <div class="card-title" data-i18n="draw_title">Draw a line</div>
+                <div class="card-desc" data-i18n="draw_desc">Hold a left pinch and trace with your right index finger.</div>
+                <div class="card-hands"><span class="hand-badge L" data-i18n="draw_h1">Left pinch</span><span class="hand-badge R" data-i18n="draw_h2">Right index</span></div>
             </div>
             <div class="card-arrow">-</div>
         </a>
 
-        <div class="section-title">Commands (Left hand + Right Pinch to confirm)</div>
+        <div class="section-title" data-i18n="sec_commands">Commands (Left hand + Right Pinch to confirm)</div>
         <a href="practice.html?g=undo" class="card">
             <div class="card-body">
-                <div class="card-title">Undo Create</div>
-                <div class="card-desc">Use three fingers: the index, middle and angular.</div>
-                <div class="card-hands"><span class="hand-badge L">3 finges, middle, angular, index</span><span class="hand-badge R">Right pinch</span></div>
+                <div class="card-title" data-i18n="undo_title">Undo Create</div>
+                <div class="card-desc" data-i18n="undo_desc">Use three fingers: the index, middle and angular.</div>
+                <div class="card-hands"><span class="hand-badge L" data-i18n="undo_h1">3 finges, middle, angular, index</span><span class="hand-badge R" data-i18n="undo_h2">Right pinch</span></div>
             </div>
             <div class="card-arrow">=</div>
         </a>
 
         <a href="practice.html?g=color" class="card">
             <div class="card-body">
-                <div class="card-title">Open color palette</div>
-                <div class="card-desc">Extend your ring + pinky fingers on your left hand.</div>
-                <div class="card-hands"><span class="hand-badge L">Pinky + ring</span><span class="hand-badge R">Then select the color and confirm with the right hand and make a pinch</span></div>
+                <div class="card-title" data-i18n="color_title">Open color palette</div>
+                <div class="card-desc" data-i18n="color_desc">Extend your ring + pinky fingers on your left hand.</div>
+                <div class="card-hands"><span class="hand-badge L" data-i18n="color_h1">Pinky + ring</span><span class="hand-badge R" data-i18n="color_h2">Then select the color and confirm with the right hand and make a pinch</span></div>
             </div>
             <div class="card-arrow">=</div>
         </a>
 
         <a href="practice.html?g=clear" class="card">
             <div class="card-body">
-                <div class="card-title">Clear canvas</div>
-                <div class="card-desc">Make the peace signal.</div>
-                <div class="card-hands"><span class="hand-badge L">Index + Middle</span><span class="hand-badge R">Right pinch</span></div>
+                <div class="card-title" data-i18n="clear_title">Clear canvas</div>
+                <div class="card-desc" data-i18n="clear_desc">Make the peace signal.</div>
+                <div class="card-hands"><span class="hand-badge L" data-i18n="clear_h1">Index + Middle</span><span class="hand-badge R" data-i18n="clear_h2">Right pinch</span></div>
             </div>
             <div class="card-arrow">=</div>
         </a>
         <a href="practice.html?g=brush" class="card">
             <div class="card-body">
-                <div class="card-title">Change brush size</div>
-                <div class="card-desc">Make a fist with your left hand and make a pinch with your right hand.</div>
-                <div class="card-hands"><span class="hand-badge L">Fist</span><span class="hand-badge R">Right pinch</span></div>
+                <div class="card-title" data-i18n="brush_title">Change brush size</div>
+                <div class="card-desc" data-i18n="brush_desc">Make a fist with your left hand and make a pinch with your right hand.</div>
+                <div class="card-hands"><span class="hand-badge L" data-i18n="brush_h1">Fist</span><span class="hand-badge R" data-i18n="brush_h2">Right pinch</span></div>
             </div>
             <div class="card-arrow">=</div>
         </a>
         <a class="card" href="practice.html?g=ai">
             <div class="card-body">
-            <div class="card-title">Analyze with AI</div>
-            <div class="card-desc">Extend your left thumb while keeping other fingers closed.</div>
-            <div class="card-hands"><span class="hand-badge L">Thumb up</span><span class="hand-badge R">Right pinch</span></div>
+            <div class="card-title" data-i18n="ai_title">Analyze with AI</div>
+            <div class="card-desc" data-i18n="ai_desc">Extend your left thumb while keeping other fingers closed.</div>
+            <div class="card-hands"><span class="hand-badge L" data-i18n="ai_h1">Thumb up</span><span class="hand-badge R" data-i18n="ai_h2">Right pinch</span></div>
             </div>
             <div class="card-arrow">-</div>
         </a>
 
     </div>
-<a class="back" href="../index.html">- Back to Kreslit Drawing</a>
+<button class="bbtn lang-btn" id="langToggle" style="margin-top:18px;"><span id="langFlag">🇬🇧</span> <span id="langCode">EN</span></button>
+<a class="back" href="../index.html" data-i18n="back">- Back to Kreslit Drawing</a>
+<script>
+(function(){
+    const LANGS = {
+        en: {
+            title: "Tutorial Mode",
+            sub: "Pick a gesture to practice. The camera will detect if you are doing it correctly*(You can see all the gestures in the README.md). ",
+            sec_drawing: "Drawing",
+            sec_commands: "Commands (Left hand + Right Pinch to confirm)",
+            draw_title: "Draw a line",
+            draw_desc: "Hold a left pinch and trace with your right index finger.",
+            draw_h1: "Left pinch",
+            draw_h2: "Right index",
+            undo_title: "Undo Create",
+            undo_desc: "Use three fingers: the index, middle and angular.",
+            undo_h1: "3 finges, middle, angular, index",
+            undo_h2: "Right pinch",
+            color_title: "Open color palette",
+            color_desc: "Extend your ring + pinky fingers on your left hand.",
+            color_h1: "Pinky + ring",
+            color_h2: "Then select the color and confirm with the right hand and make a pinch",
+            clear_title: "Clear canvas",
+            clear_desc: "Make the peace signal.",
+            clear_h1: "Index + Middle",
+            clear_h2: "Right pinch",
+            brush_title: "Change brush size",
+            brush_desc: "Make a fist with your left hand and make a pinch with your right hand.",
+            brush_h1: "Fist",
+            brush_h2: "Right pinch",
+            ai_title: "Analyze with AI",
+            ai_desc: "Extend your left thumb while keeping other fingers closed.",
+            ai_h1: "Thumb up",
+            ai_h2: "Right pinch",
+            back: "- Back to Kreslit Drawing"
+        },
+        es: {
+            title: "Modo Tutorial",
+            sub: "Elige un gesto para practicar. La cámara detectará si lo estás haciendo correctamente*(Puedes ver todos los gestos en el README.md).",
+            sec_drawing: "Dibujo",
+            sec_commands: "Comandos (Mano izq. + Pellizco der. para confirmar)",
+            draw_title: "Dibujar una línea",
+            draw_desc: "Mantén un pellizco izquierdo y traza con tu dedo índice derecho.",
+            draw_h1: "Pellizco izq.",
+            draw_h2: "Índice der.",
+            undo_title: "Deshacer",
+            undo_desc: "Usa tres dedos: índice, medio y anular.",
+            undo_h1: "3 dedos, medio, anular, índice",
+            undo_h2: "Pellizco der.",
+            color_title: "Abrir paleta de colores",
+            color_desc: "Extiende los dedos anular y meñique de tu mano izquierda.",
+            color_h1: "Meñique + anular",
+            color_h2: "Luego selecciona el color y confirma con la mano derecha haciendo un pellizco",
+            clear_title: "Limpiar lienzo",
+            clear_desc: "Haz la señal de paz.",
+            clear_h1: "Índice + Medio",
+            clear_h2: "Pellizco der.",
+            brush_title: "Cambiar tamaño de pincel",
+            brush_desc: "Haz un puño con tu mano izquierda y un pellizco con tu mano derecha.",
+            brush_h1: "Puño",
+            brush_h2: "Pellizco der.",
+            ai_title: "Analizar con IA",
+            ai_desc: "Extiende tu pulgar izquierdo manteniendo los demás dedos cerrados.",
+            ai_h1: "Pulgar arriba",
+            ai_h2: "Pellizco der.",
+            back: "- Volver a Kreslit Drawing"
+        }
+    };
+
+    let lang = localStorage.getItem('kreslit-lang') || 'en';
+
+    function applyLang() {
+        const d = LANGS[lang] || LANGS.en;
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (d[key] !== undefined) el.textContent = d[key];
+        });
+        document.getElementById('langFlag').textContent = lang === 'es' ? '🇪🇸' : '🇬🇧';
+        document.getElementById('langCode').textContent = lang.toUpperCase();
+    }
+
+    document.getElementById('langToggle').addEventListener('click', () => {
+        lang = lang === 'en' ? 'es' : 'en';
+        localStorage.setItem('kreslit-lang', lang);
+        applyLang();
+    });
+
+    applyLang();
+})();
+</script>
 </body>
 </html>
